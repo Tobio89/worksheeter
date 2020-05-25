@@ -1,13 +1,3 @@
-# HOMESITE
-A flask website for my home network, with various functions:
+# ESL-Auto-Worksheet
 
-Index - display a random quote from Epictetus' Enchiridion
-
-Robinschedule - Display timetable for who is watching Robin
-
-Shopping - Stores a shopping list of things we need to buy
-
-Shipping - Stores a list of incoming parcels - and scrapes tracking site for their status!
-
-
-"# worksheeter" 
+A flask app that searches the CNN site for articles and produces a basic ESL discussion worksheet from it.
