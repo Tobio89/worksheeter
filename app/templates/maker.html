@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}{{ super() }}Choose The Article{% endblock %}
+
+{% block content %}
+<div class="page-header" style="padding-left: 50px;">
+    <h1>ESL Auto-Worksheet</h1>
+    <h3>Choose An Article</h3>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="container">
+            {% for category, message in messages %}
+                <p>
+                
+                <div class="alert alert-{{category}}" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>
+                        {% if category == 'info' %}
+                            Information:
+                        {% elif category == 'danger' %}
+                            ERROR:
+                        {% elif category == 'success' %}
+                            Success:
+                        {% else %}
+                            {{category}}
+                        {% endif %}
+                    </strong>
+                        
+                    <br>{{ message }}
+            {% endfor %}
+                
+                </div>
+                </p>
+        </div>
+        {% endif %}
+{% endwith %}
+
+<div class="container">
+
+    {% if chosen_terms %}
+        <p>CNN articles about: {{chosen_terms}}</p>
+        <p>We recommend reading the article, and if you like it, select it and get your worksheet.</p>
+    {% endif %}
+
+
+    {% if articles %}
+        <div>
+        <style>
+            .article-link{
+                padding-left: 10px;
+            }
+        </style>
+            <form method="POST">
+
+                {% for art in articles %}
+                    <p><input type="radio" name="user_selected_article" value="{{art.href}}%{{art.head}}"><a class='article-link' href={{art.href}}>{{art.head}}</a></p>
+                {% endfor %}
+
+                <input type="submit" name="submit_article" value="Make My Worksheet!">
+            </form>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

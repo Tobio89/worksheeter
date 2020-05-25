@@ -1,0 +1,177 @@
+from .worksheet_config import common_words, BS4Headers
+# from CNN import test_article_contents # Change this later
+import random
+import bs4, requests
+from pprint import pprint
+
+
+
+# paragraph_divided = test_article_contents
+
+def getUniqueWords(listOfParagraphs):
+
+    '''
+    Takes a list containing paragraphs of content, and returns a filtered list of all the unique words.
+    '''
+
+    words = (' ').join(listOfParagraphs) #Turn the paragraph into list of words.
+
+    onlyWordCharacters = ''.join([i.lower() for i in words if i.isalpha() or i==' ' or i=="'" or i=='-'])
+
+    wordList = set(onlyWordCharacters.split(' '))
+    remove_apostrophe_S_words_etc = []
+    for word in wordList:
+
+        if word.endswith("'s"):
+            word =word[:-2]
+        elif word.startswith('cnn'):
+            word = word[3:]
+        if "you'" in word or "hasn'" in word:
+            continue
+
+
+        if len(word) < 4:
+            continue
+        else:
+            remove_apostrophe_S_words_etc.append(word)
+
+                
+    wordList = set(remove_apostrophe_S_words_etc)
+
+    significantWordList = [word for word in wordList if word not in common_words]
+    significantWordList.sort()
+
+    return significantWordList
+
+def getRandomUniqueWords(listOfParagraphs, sample=6):
+    '''
+    Takes a list of paragrahps of content, and returns a random sample of unique words from those paragraphs.
+    '''
+    source = getUniqueWords(listOfParagraphs)
+    if len(source) < sample:
+        print('Low quantity of words found')
+        sample = len(source)
+    return random.sample(source, sample)
+
+def getDefinitionFromDictSite(word):
+    '''
+    Given a single word, searches for definition on web and returns most uses for that word.  Returns a dict.
+
+    Parameters:
+    word: Single word as string.
+
+    '''
+
+    
+    dictionary_url = 'https://www.dictionary.com/browse/'
+
+
+    res = requests.get(f'{dictionary_url}{word}', headers=BS4Headers)
+    res.raise_for_status()
+
+    soup = bs4.BeautifulSoup(res.text, features='html.parser')
+
+    # word_heading_section = soup.select("#top-definitions-section")
+    heading = soup.select('.css-1jzk4d9')
+
+    top_definitions_section = soup.select('.css-1urpfgu.e16867sm0')[0] # Dict site uses this class to contain definitions chunk. We just want the top.
+    
+    # Get IPA for the word
+    IPA_pron = top_definitions_section.select('.pron-ipa-content.css-z3mf2.evh0tcl2')[0].text
+
+    definitions = top_definitions_section.select('.css-pnw38j.e1hk9ate0') #This contains each definition. Iterate over this
+
+    found_definitions_dict = {}
+    for c in definitions:
+        part_of_speech = c.select('.luna-pos')[0].text.capitalize() #Noun, Verb, etc
+        all_defs = c.select('.e1hk9ate4')
+
+        definition_text = [] # List of all text-only definitions
+
+        for definition_paragraph in all_defs: #For each chunk of definitions given for the part of speech...
+
+            default_content = definition_paragraph.select('.default-content') #Check if there is the expandable cell
+            if default_content:
+
+                for definition_text_span in default_content: #For each actual entry inside this
+                    for content in definition_text_span.select('.e1q3nk1v3'): #Get the text content from it.
+
+                        definition_text_span = content.text
+
+                        for luna_example in content.select('.luna-example'): # Find the example sentences
+                            example_sentence = luna_example.text
+                            
+                            definition_text_span = definition_text_span.replace(example_sentence, '')
+
+                        
+                        
+                        if definition_text_span.endswith(': '):
+                            definition_text_span = definition_text_span[:-2]
+                        definition_text.append(definition_text_span)
+
+            else: #No expandable content in cell
+
+                for content in definition_paragraph.select('.e1q3nk1v3'): #Grab all content.
+
+                    definition_text_span = content.text
+
+                    for luna_example in content.select('.luna-example'): # Find the example sentences
+                        example_sentence = luna_example.text
+                        
+                        definition_text_span = definition_text_span.replace(example_sentence, '')
+
+                    
+                    
+                    if definition_text_span.endswith(': '):
+                        definition_text_span = definition_text_span[:-2]
+
+                    definition_text.append(definition_text_span)
+                    
+                    # definition_text.append(content.text)
+
+        found_definitions_dict[part_of_speech] = definition_text
+
+            
+
+
+
+    return found_definitions_dict  
+
+# print(getDefinitionFromDictSite('conditions'))
+
+
+
+        
+
+        
+
+
+    # actual_definitions = top_definitions_section[1:]
+
+    # IPA_pron = pronunciation_chunk.select('.pron-spell-ipa-containera')
+    # print(IPA_pron)
+
+def getMultipleDefinitions(wordList):
+    '''
+    Given a list of words, searches for most common uses of each word. Returns a dict, key is word, item is definitions.
+
+    Parameters:
+    wordList: List of string words.
+
+    '''
+
+
+    defined_words = {}
+    for word in wordList:
+        print(f'Working on: {word}')
+        try:
+            result = getDefinitionFromDictSite(word)
+            defined_words[word.capitalize()] = result
+        except:
+            print(f'Could not find this word: {word}')
+
+    return defined_words
+
+
+
+# print(getMultipleDefinitions(getRandomUniqueWords(test_article_contents)))

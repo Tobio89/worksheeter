@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ super() }}Begin Here{% endblock %}
+
+{% block content %}
+<div class="page-header" style="padding-left: 50px;">
+    <h1>ESL Auto-Worksheet</h1>
+</div>
+<div class="container">
+
+    <h3>About Auto-Worksheet</h3>
+    <p>The Auto-Worksheet program lets you enter a search term, and will gather news articles from the CNN website for you to use in your ESL class.</p>
+    <p>Select an article you like and it automatically chooses several notable words and collects the definitions from Dictionary.com</p>
+    <p>You will then be able to download a .docx file containing the article and vocabulary, and three automatically generated fill-in-the-blank questions.
+        <br>The file will also contain three general discussion questions.</p>
+    <p>Auto-Worksheet makes finding articles and producing questions easier for you.
+        Once downloaded, You can either add your own questions, or use the worksheet as-is.
+    </p>
+    <br>
+    <h4>Begin now!</h4>
+    <form method='POST'>
+        <input name="user_search_terms">
+        <button type="submit">Search!</button>
+    </form>
+
+</div>
+{% endblock %}
