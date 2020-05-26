@@ -38,7 +38,7 @@ def index():
 @main.route('/maker', methods=['GET', 'POST'])
 def maker():
 
-    if request.method == 'POST':
+    if request.method == 'POST': # Handle the selection of the article
 
         if 'user_selected_article' in request.form:        
             form_response = request.form.get('user_selected_article')
@@ -55,8 +55,8 @@ def maker():
         session['search_terms'] = None
 
         return redirect(url_for('main.sheet'))
-    else:
 
+    else: # Handle the gathering of articles to choose from
         terms = session['search_terms']
         if terms:
             CNN_articles = getNewsArticles(terms)

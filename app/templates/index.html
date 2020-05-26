@@ -3,6 +3,8 @@
 {% block title %}{{ super() }}Begin Here{% endblock %}
 
 {% block content %}
+{{ super() }}
+
 <div class="page-header" style="padding-left: 50px;">
     <h1>ESL Auto-Worksheet</h1>
 </div>
@@ -18,10 +20,17 @@
     </p>
     <br>
     <h4>Begin now!</h4>
-    <form method='POST'>
+    <form id="CNN-search-terms" method='POST'>
         <input name="user_search_terms">
-        <button type="submit">Search!</button>
+        <input type="button" onclick="submitAndWait()" value="Search!">
     </form>
+    <script>
+        function submitAndWait() {
+            document.querySelector("#CNN-search-terms").submit();
+            
+            document.querySelector("#wait-overlay").style.display = "block";
 
+        }
+    </script>
 </div>
 {% endblock %}

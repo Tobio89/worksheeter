@@ -3,6 +3,7 @@
 {% block title %}{{ super() }}Choose The Article{% endblock %}
 
 {% block content %}
+{{ super() }}
 <div class="page-header" style="padding-left: 50px;">
     <h1>ESL Auto-Worksheet</h1>
     <h3>Choose An Article</h3>
@@ -54,16 +55,26 @@
                 padding-left: 10px;
             }
         </style>
-            <form method="POST">
+            <form id="select-article" method="POST">
 
                 {% for art in articles %}
                     <p><input type="radio" name="user_selected_article" value="{{art.href}}%{{art.head}}"><a class='article-link' href={{art.href}}>{{art.head}}</a></p>
                 {% endfor %}
 
-                <input type="submit" name="submit_article" value="Make My Worksheet!">
+                <!-- <input type="submit" name="submit_article" value="Make My Worksheet!"> -->
+                <input type="button" name="submit_article" onclick="selectAndWait()" value="Make My Worksheet!">
             </form>
         </div>
     {% endif %}
 
+
+    <script>
+        function selectAndWait() {
+            document.querySelector("#select-article").submit();
+            
+            document.querySelector("#wait-overlay").style.display = "block";
+
+        }
+    </script>
 </div>
 {% endblock %}

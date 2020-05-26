@@ -1,6 +1,69 @@
 {% extends "bootstrap/base.html" %}
 
 {% block title %}Auto-Worksheet - {% endblock %}
+{% block styles %}
+
+{{ super() }}
+<style>
+
+    #wait-overlay {
+        position: fixed; /* Sit on top of the page content */
+        display: none; /* Hidden by default */
+        width: 100%; /* Full width (cover the whole page) */
+        height: 100%; /* Full height (cover the whole page) */
+        top: 0; 
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+        z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+        cursor: progress/* Add a pointer on hover */
+    }
+    #wait-container {
+        display:flex;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    #wait-loader {
+        /* position: absolute; */
+        /* left: 50%;
+        top: 50%; */
+        z-index: 1;
+        width: 150px;
+        height: 150px;
+        margin: -75px 0 0 -75px;
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #3498db;
+        width: 120px;
+        height: 120px;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    #wait-label {
+        /* position: absolute;
+        left: 50%;
+        top: 70%; */
+        z-index: 1;
+        color: white;
+        font-size: 20pt;
+        animation: fade 2s ease infinite alternate;
+        padding: 13vh;
+    }  
+    @keyframes fade {
+        0% { opacity: 1; }
+        100% {opacity: 0;}
+    } 
+
+</style>
+{% endblock %}
 
 {% block navbar %}
 <div class="navbar navbar-inverse" role="navigation">
@@ -29,9 +92,12 @@
 {% endblock %}
 
 
-
-
 {% block content %}
+<div id="wait-overlay">
+    <div id="wait-container">
+        <div id="wait-loader"></div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
