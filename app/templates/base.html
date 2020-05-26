@@ -32,8 +32,8 @@
         /* left: 50%;
         top: 50%; */
         z-index: 1;
-        width: 150px;
-        height: 150px;
+        width: 100px;
+        height: 100px;
         margin: -75px 0 0 -75px;
         border: 16px solid #f3f3f3;
         border-radius: 50%;
@@ -60,7 +60,24 @@
     @keyframes fade {
         0% { opacity: 1; }
         100% {opacity: 0;}
-    } 
+    }
+    .word-selection-container {
+        /* display:flex; */
+        width:70vw;
+        /* height:90vh; */
+    }
+    .selectable-word {
+        border:1px solid black;
+        float:left;
+        padding:5px;
+        width: 10vw;
+        text-align: center;
+    }
+    .selected {
+        background: red;
+    }
+
+
 
 </style>
 {% endblock %}

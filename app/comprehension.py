@@ -10,7 +10,7 @@ def findQuotations(listOfParas):
     
     return quotation_paragraphs
 
-def produceCloze(listOfParas, quant=3):
+def produceCloze(listOfParas, quant=6):
 
     choosing = True
     cloze_ified_paras = []

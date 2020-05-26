@@ -10,7 +10,7 @@ from . import main
 # from ..tasks import recurringTask, oneTimeTask, getTimelessDate
 
 from ..CNN import getNewsArticles, getArticleContent
-from ..vocab import getRandomUniqueWords, getMultipleDefinitions
+from ..vocab import getAllUniqueWords, getDefinitionsForUserChosenWords, getDefinitionForRandomWords
 from ..docx_maker import writeDocx
 
 
@@ -54,12 +54,17 @@ def maker():
 
         session['search_terms'] = None
 
-        return redirect(url_for('main.sheet'))
+        return redirect(url_for('main.words'))
 
     else: # Handle the gathering of articles to choose from
         terms = session['search_terms']
         if terms:
-            CNN_articles = getNewsArticles(terms)
+            try:
+                CNN_articles = getNewsArticles(terms)
+            except:
+                flash(f'Failed to find articles for {terms}!', 'danger')
+                CNN_articles = None
+                return redirect(url_for('main.index'))
         else:
             terms = None
             CNN_articles = None
@@ -69,17 +74,48 @@ def maker():
     return render_template('maker.html', chosen_terms=terms, articles=CNN_articles)
 
 
+@main.route('/words', methods=['GET', "POST"])
+def words():
+
+    if request.method == 'POST':
+        user_selected_words = request.form.get('submitted_words').split('#')
+        session['user-words'] = user_selected_words
+        return(redirect(url_for('main.sheet')))
+
+
+    else:
+
+        user_article_title = session['article-title']
+        user_article_url = session['article-url']
+
+        article_paragraphs = getArticleContent(user_article_url)
+        session['article-paragraphs'] = article_paragraphs
+
+        unique_words_in_paragraph = getAllUniqueWords(article_paragraphs)
+
+    # if the person chooses no words or presses the random button:
+    # wordList = getDefinitionForRandomWords(unique_words_in_paragraph)
+    # session['user_word_list'] = wordList #probably have to join this to get
+    
+
+    return render_template('words.html', words=unique_words_in_paragraph)
+
+
+
 @main.route('/sheet', methods=['GET', 'POST'])
 def sheet():
 
     user_article_title = session['article-title']
-    user_article_url = session['article-url']
+    article_paragraphs = session['article-paragraphs']
+    users_words = session['user-words']
+    if users_words:
+        user_word_definitions = getDefinitionsForUserChosenWords(users_words)
+    else:
+        print('User forgot to select words. Going random.')
+        user_word_definitions = getDefinitionForRandomWords(article_paragraphs)
+        flash('No words were selected, so six random words were picked.', 'info')
 
-    article_paragraphs = getArticleContent(user_article_url)
-    user_word_list = getRandomUniqueWords(article_paragraphs)
-    # user_word_definitions = getMultipleDefinitions(user_word_list)
-    
-    download_file = writeDocx(article_paragraphs, user_word_list, user_article_title)
+    download_file = writeDocx(article_paragraphs, user_word_definitions, user_article_title)
 
     return render_template('sheet.html', downLink=download_file)
     

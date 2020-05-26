@@ -8,7 +8,7 @@ from pprint import pprint
 
 # paragraph_divided = test_article_contents
 
-def getUniqueWords(listOfParagraphs):
+def getAllUniqueWords(listOfParagraphs):
 
     '''
     Takes a list containing paragraphs of content, and returns a filtered list of all the unique words.
@@ -43,7 +43,7 @@ def getUniqueWords(listOfParagraphs):
 
     return significantWordList
 
-def getRandomUniqueWords(listOfParagraphs, sample=6):
+def getRandomWordsFromParagraph(listOfParagraphs, sample=6):
     '''
     Takes a list of paragrahps of content, and returns a random sample of unique words from those paragraphs.
     '''
@@ -52,6 +52,7 @@ def getRandomUniqueWords(listOfParagraphs, sample=6):
         print('Low quantity of words found')
         sample = len(source)
     return random.sample(source, sample)
+
 
 def getDefinitionFromDictSite(word):
     '''
@@ -142,6 +143,39 @@ def getDefinitionFromDictSite(word):
 
 
         
+def getDefinitionForRandomWords(listOfWords, sample=6):
+
+    defined_words = {}
+    collecting = True
+    word_index = 0
+    added_words = 0
+
+    # Prevent going out of range
+    if len(listOfWords) < sample:
+        print('List of words is smaller than the sample.')
+        sample = len(listOfWords)
+
+    # Choose a sample of words to work from
+    random.shuffle(listOfWords)
+
+    # Collect word definition
+    while collecting: #Use while loop to cover searching for a word
+        word = listOfWords[word_index]
+        print(f'Working on: {word}')
+        try:
+            result = getDefinitionFromDictSite(word)
+            defined_words[word.capitalize()] = result
+            added_words += 1
+        except:
+            print(f'Could not find this word: {word}')
+        
+        word_index += 1
+
+        if added_words >= sample:
+            collecting = False
+        
+    return defined_words
+
 
         
 
@@ -151,7 +185,7 @@ def getDefinitionFromDictSite(word):
     # IPA_pron = pronunciation_chunk.select('.pron-spell-ipa-containera')
     # print(IPA_pron)
 
-def getMultipleDefinitions(wordList):
+def getDefinitionsForUserChosenWords(wordList):
     '''
     Given a list of words, searches for most common uses of each word. Returns a dict, key is word, item is definitions.
 

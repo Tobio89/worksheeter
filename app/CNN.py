@@ -26,7 +26,7 @@ def getNewsArticles(searchTerms, quantity=20):
     print('Headless Chrome Initialised...')
     articles = driver.find_elements_by_css_selector("div.cnn-search__results-list div.cnn-search__result-contents")
 
-    WebDriverWait(driver, 30).until( # Wait until it loads
+    WebDriverWait(driver, 20).until( # Wait until it loads
             EC.presence_of_element_located((By.CSS_SELECTOR, "div.cnn-search__result-contents")) #This table appears when loaded
         )
 
