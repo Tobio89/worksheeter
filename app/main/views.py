@@ -1,5 +1,5 @@
 from datetime import datetime
-import os
+import os, random
 from flask import Flask, render_template, session, redirect, url_for, request, flash, send_file, send_from_directory
 from .. import db
 # from ..models import # Add the DB models here
@@ -12,6 +12,7 @@ from . import main
 from ..CNN import getNewsArticles, getArticleContent
 from ..vocab import getAllUniqueWords, getDefinitionsForUserChosenWords, getDefinitionForRandomWords
 from ..docx_maker import writeDocx
+from ..maintenance import clearOldFiles
 
 
 # Constant Variables
@@ -29,14 +30,14 @@ def index():
             user_search_terms = request.form.get('user_search_terms')
             session['search_terms'] = user_search_terms
 
-            return redirect(url_for('main.maker'))
+            return redirect(url_for('main.articles'))
 
     return render_template('index.html')
 
 
 
-@main.route('/maker', methods=['GET', 'POST'])
-def maker():
+@main.route('/articles', methods=['GET', 'POST'])
+def articles():
 
     if request.method == 'POST': # Handle the selection of the article
 
@@ -71,14 +72,23 @@ def maker():
     
     
 
-    return render_template('maker.html', chosen_terms=terms, articles=CNN_articles)
+    return render_template('articles.html', chosen_terms=terms, articles=CNN_articles)
 
 
 @main.route('/words', methods=['GET', "POST"])
 def words():
 
     if request.method == 'POST':
-        user_selected_words = request.form.get('submitted_words').split('#')
+        form_words = request.form.get('submitted_words')
+        
+        #Cover weird situation where JS selects random words but they're not loaded here.
+        if not form_words:
+            print('No selected words found. Randomly choosing 6.')
+            user_selected_words = random.sample(unique_words_in_paragraph, 6)
+
+        else:
+            user_selected_words = form_words.split('#')
+
         session['user-words'] = user_selected_words
         return(redirect(url_for('main.sheet')))
 
@@ -88,10 +98,21 @@ def words():
         user_article_title = session['article-title']
         user_article_url = session['article-url']
 
-        article_paragraphs = getArticleContent(user_article_url)
-        session['article-paragraphs'] = article_paragraphs
+        print(f'Getting words for {user_article_title}')
+        try:
+            article_paragraphs = getArticleContent(user_article_url)
 
-        unique_words_in_paragraph = getAllUniqueWords(article_paragraphs)
+        except:
+            print('Failed to extract paragraph data')
+            flash('Failed to extract paragraph data! Sorry :(', 'danger')
+
+        try:
+            unique_words_in_paragraph = getAllUniqueWords(article_paragraphs)
+        except:
+            print('Failed to gather words')
+            flash('Failed to gather words! Sorry :(', 'danger')
+            return(redirect(url_for('main.index')))
+
 
     # if the person chooses no words or presses the random button:
     # wordList = getDefinitionForRandomWords(unique_words_in_paragraph)
@@ -105,9 +126,22 @@ def words():
 @main.route('/sheet', methods=['GET', 'POST'])
 def sheet():
 
+    print('Load title from session:')
     user_article_title = session['article-title']
-    article_paragraphs = session['article-paragraphs']
+    print(user_article_title != None)
+
+    # print('Load paragraphs from session:')
+    # article_paragraphs = session['article-paragraphs']
+    # print(article_paragraphs != None)
+
+
     users_words = session['user-words']
+    user_article_url = session['article-url']
+    print('Loading paragraphs...')
+    article_paragraphs = getArticleContent(user_article_url)
+
+
+
     if users_words:
         user_word_definitions = getDefinitionsForUserChosenWords(users_words)
     else:
@@ -122,6 +156,8 @@ def sheet():
       
 @main.route('/download/<filename>')
 def download_file(filename):
+    print('Pre-download clean-up...')
+    clearOldFiles()
 
     return send_from_directory(directory='./static/download', filename=filename, as_attachment=True)
     

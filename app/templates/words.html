@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}{{ super() }}Choose The Article{% endblock %}
+
+{% block content %}
+{{ super() }}
+<div class="page-header" style="padding-left: 50px;">
+    <h1>ESL Auto-Worksheet</h1>
+    <h3>Choose An Article</h3>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="container">
+            {% for category, message in messages %}
+                <p>
+                
+                <div class="alert alert-{{category}}" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>
+                        {% if category == 'info' %}
+                            Information:
+                        {% elif category == 'danger' %}
+                            ERROR:
+                        {% elif category == 'success' %}
+                            Success:
+                        {% else %}
+                            {{category}}
+                        {% endif %}
+                    </strong>
+                        
+                    <br>{{ message }}
+            {% endfor %}
+                
+                </div>
+                </p>
+        </div>
+        {% endif %}
+{% endwith %}
+
+<div class="container" style="padding-bottom: 10vh;">
+
+    {% if words %}
+        <div style="display: flex; justify-content: center;">
+            <form id="select-words" method="POST" onsubmit="return getWordsFromCells();">
+                <div style="width:inherit; padding:10px;text-align: center;">
+                        
+                        <input type="button" name="randomize_words" onclick="selectRandomCells()" value="Select Random Words">
+                        <input type="number" id="howManyRandomWords" min='1' max="20" value="6">
+                        <button id="submit_words" type="submit" name="submitted_words" formmethod="POST">Submit Chosen Words</button>
+                </div>
+                <div class="word-selection-container">
+
+                    {% for word in words %}
+                        <div class="selectable-word">{{word}}</div>
+                    {% endfor %}
+                
+                </div>
+                <!-- <input type="submit" name="submit_article" value="Make My Worksheet!"> -->              
+            </form>
+            
+        </div>
+    {% endif %}
+
+
+    <script>
+        function selectWords() {
+            const wordContainer = document.querySelector('.word-selection-container');
+
+            function clickedCell(e){
+                let cell = e.target
+
+                cell.classList.toggle('selected')
+
+            }
+
+            wordContainer.addEventListener('click', clickedCell);
+        };
+        selectWords();
+
+        function generateRandomIndexes(howMany) {
+            const randomCap = document.querySelectorAll(".selectable-word").length
+            let arr = [];
+            while(arr.length < howMany){
+                let r = Math.floor(Math.random() * randomCap);
+                if(arr.indexOf(r) === -1) arr.push(r);
+            }
+            console.log(arr);
+            return arr
+        };
+        function selectRandomCells() {
+            const userWordQuant = document.querySelector("#howManyRandomWords").value
+            const selectable_words = document.querySelectorAll(".selectable-word")
+            const randomWordIndexes = generateRandomIndexes(userWordQuant)
+            console.log(userWordQuant)
+
+            for (i = 0; i < selectable_words.length; i++ ) {
+                word = selectable_words[i]
+                console.log(word)
+
+                // If that index isn't in the list
+                if (randomWordIndexes.indexOf(i) === -1) {
+                    
+                    if (word.classList.contains('selected')){ // if it's selected
+                        word.classList.remove("selected") //deselect the word
+                    };
+                
+                // If the word index IS in the list (please select)
+                } else { 
+                    if (!word.classList.contains("selected")){ // If it's not selected
+                        word.classList.add("selected") // select it
+                    }
+
+                };
+            };
+
+        };
+    
+        function getWordsFromCells() {
+            var cells = document.querySelectorAll('.selected')
+
+            if (cells.length <= 0){ // Cover user failed to select any words - randomly select words for them :)
+                selectRandomCells();
+                var cells = document.querySelectorAll('.selected');
+            };
+
+            let chosenWords = []
+
+            for (i=0; i < cells.length; i++) {
+                let word = cells[i].innerText
+                console.log(word)
+                chosenWords.push(word)
+            };
+
+
+
+            let wordString = chosenWords.join('#')
+
+            //Apply wordstring to button value
+            const button = document.querySelector("#submit_words")
+            button.value = wordString
+            
+            // Apply waiting overlay
+            document.querySelector("#loading-overlay").style.display = "block";
+        }
+    </script>
+</div>
+
+{% endblock %}

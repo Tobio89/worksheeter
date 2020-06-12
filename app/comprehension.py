@@ -10,18 +10,17 @@ def findQuotations(listOfParas):
     
     return quotation_paragraphs
 
-def produceCloze(listOfParas, quant=6):
+def produceCloze(listOfParas):
 
-    choosing = True
     cloze_ified_paras = []
 
-    while choosing:
+    print(f'Producing CLOZE sentences from {len(listOfParas)} paragraphs.')
 
-        selected_para = random.choice(listOfParas)
+    for para in listOfParas:
 
-
-        paraList = selected_para.split(' ')
+        paraList = para.split(' ')
         if len(paraList) < 10:
+            print('Skipping short paragraph')
             continue
 
         cloze_word_limit = len(paraList) // 3
@@ -39,8 +38,6 @@ def produceCloze(listOfParas, quant=6):
 
         cloze_ified_paras.append(' '.join(paraList))
 
-        if len(cloze_ified_paras) >= quant:
-            choosing = False
 
     return cloze_ified_paras
 

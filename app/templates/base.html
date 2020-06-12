@@ -61,6 +61,100 @@
         0% { opacity: 1; }
         100% {opacity: 0;}
     }
+    
+    .doc-overlay {
+            /* display: flex;
+            align-items: center;
+            justify-content: center; */
+            position: fixed; /* Sit on top of the page content */
+            display: none; /*Hidden by default */
+            width: 100%; /* Full width (cover the whole page) */
+            height: 100%; /* Full height (cover the whole page) */
+            top: 0; 
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+            z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+            cursor: progress;/* Add a pointer on hover */
+        }
+    .doc-container{
+        display:flex;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;   
+    }
+        
+    .doc-page {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            display:flex;
+            flex-direction: column;
+            align-items: left;
+            justify-content: space-around;
+            width: 80px;
+            height: 100px;
+            background: rgb(240, 240, 240);
+            border-radius: 5%;
+            border: 2px solid darkgray;
+            transform-origin:center;
+           
+        }
+    #index-anim{
+            animation: pagesort 2s linear infinite;
+    }    
+    @keyframes pagesort {
+            0% {
+                top: 30%;
+                left: 50%;
+            }
+            50%{
+                top: 50%;
+                left: 45%;
+            }
+            50.1% {
+                top: 30%;
+                left: 50%
+            }
+            100% {
+                top: 50%;
+                left: 55%
+            }
+        }
+    .doc-line {
+            
+            background: grey;
+            /* width: 80%; */
+            height: 5%;
+            border-radius: 5%;
+            margin-left: 10%;
+        }
+    .doc-page :nth-child(2) {
+            width: 30%;
+        }
+    .doc-page :nth-child(3) {
+            width: 80%;
+        }
+    .doc-page :nth-child(4) {
+            width: 40%;
+        }
+    .doc-page :nth-child(5) {
+            width: 70%;
+        }
+    .doc-page :nth-child(6) {
+            width: 60%;
+        }
+    .doc-page :first-child {
+            background: none;
+        }
+    .doc-page :last-child {
+            background: none;
+        }
+
+
     .word-selection-container {
         /* display:flex; */
         width:70vw;
@@ -110,11 +204,29 @@
 
 
 {% block content %}
-<div id="wait-overlay">
-    <div id="wait-container">
-        <div id="wait-loader"></div>
+<div class="doc-overlay" id="loading-overlay">
+    <div class="doc-container">
+        <div class="doc-page">
+            <div class="doc-line"></div>
+            <div class="doc-line"></div>
+            <div class="doc-line"></div>
+            <div class="doc-line"></div>
+            <div class="doc-line"></div>
+            <div class="doc-line"></div>
+            <div class="doc-line"></div>
+        </div>        
+        <div class="doc-page" id="index-anim">
+            <div class="doc-line"></div>
+            <div class="doc-line"></div>
+            <div class="doc-line"></div>
+            <div class="doc-line"></div>
+            <div class="doc-line"></div>
+            <div class="doc-line"></div>
+            <div class="doc-line"></div>
+        </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block scripts %}

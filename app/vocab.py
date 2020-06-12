@@ -22,11 +22,21 @@ def getAllUniqueWords(listOfParagraphs):
     remove_apostrophe_S_words_etc = []
     for word in wordList:
 
+
+        if len(word) < 4: # Skip short words
+
+            continue
+
         if word.endswith("'s"):
             word =word[:-2]
         elif word.startswith('cnn'):
-            word = word[3:]
-        if "you'" in word or "hasn'" in word:
+ 
+            continue #Ditch the first word that contains CNN.
+        if "you'" in word or "hasn'" in word or "we'" in word: #Throw away these common words
+
+            continue
+        if word[0].isalpha() == False: #Discard weird hyphen-first words
+ 
             continue
 
 
@@ -36,7 +46,7 @@ def getAllUniqueWords(listOfParagraphs):
             remove_apostrophe_S_words_etc.append(word)
 
                 
-    wordList = set(remove_apostrophe_S_words_etc)
+    wordList = set(remove_apostrophe_S_words_etc) #Use set to remove duplicates.
 
     significantWordList = [word for word in wordList if word not in common_words]
     significantWordList.sort()

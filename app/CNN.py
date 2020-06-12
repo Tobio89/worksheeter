@@ -15,7 +15,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 CNN_URL = 'https://edition.cnn.com/search?size=100&q='
 
-def getNewsArticles(searchTerms, quantity=20):
+def getNewsArticles(searchTerms, quantity=30):
 
     searchURL = f'{CNN_URL}{searchTerms}'
 
@@ -49,7 +49,7 @@ def getNewsArticles(searchTerms, quantity=20):
         headline_links = [f"http:{a['href']}" for a in soup.find_all('a', href=True)] # This produces only the link. 
         
         # Discard video, live_news, and gallery-type articles
-        if 'videos' in headline_links[0] or 'live-news' in headline_links[0] or 'gallery' in headline_links[0] or 'travel' in headline_links[0]:
+        if 'videos' in headline_links[0] or 'live-news' in headline_links[0] or 'gallery' in headline_links[0] or 'travel' in headline_links[0] or 'underscored' in headline_links[0]:
             print(f'Skipping article {headline_text}')
 
         else:
@@ -62,6 +62,10 @@ def getNewsArticles(searchTerms, quantity=20):
             
         article_index += 1
         if len(output_list) >= quantity:
+            gathering = False
+        elif article_index > len(article_headlines)-1:
+            print('Exhausted list of articles.')
+            print(f'Returning with {len(output_list)} articles.')
             gathering = False
 
     print(f'Gathered {len(output_list)} articles.')
@@ -80,7 +84,7 @@ def getArticleContent(article_URL):
     
     output_text = [chunk.text for chunk in paragraphs]
 
-    # print(output_text)
+
     return output_text
 
-# print(getNewsArticles('manchester united'))
+# print(getArticleContent('manchester united'))

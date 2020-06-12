@@ -4,7 +4,6 @@
 
 {% block content %}
 {{ super() }}
-
 <div class="page-header" style="padding-left: 50px;">
     <h1>ESL Auto-Worksheet</h1>
 </div>
@@ -60,9 +59,12 @@
     <script>
         function submitAndWait() {
             document.querySelector("#CNN-search-terms").submit();
-            
-            document.querySelector("#wait-overlay").style.display = "block";
 
+            const overlay = document.querySelector("#loading-overlay");
+            
+            overlay.style.display = "block";
+            overlay.style.visibility = 'visible';
+        
         }
     </script>
 </div>
