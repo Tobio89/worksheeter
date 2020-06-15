@@ -73,7 +73,7 @@ def addComprehensionQuestions(para_list, doc):
     return doc
 
 
-def writeDocx(list_format_article, dict_of_vocab_words, title):
+def writeDocx(list_format_article, definitionDict, title):
 
     # Produce a title with sensible length
     alnumTitle = ''.join([i for i in title if i.isalnum() or i==' ']) # Remove special characters that prevent file saving.
@@ -94,7 +94,6 @@ def writeDocx(list_format_article, dict_of_vocab_words, title):
 
 
     # Gather definitions
-    definitionDict = dict_of_vocab_words
 
     doc.add_heading('Vocabulary', 2)
     doc = addVocaChunk(definitionDict, doc)
