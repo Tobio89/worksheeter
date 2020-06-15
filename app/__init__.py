@@ -17,11 +17,11 @@ def create_app(config_name):
     print(config[config_name])
 
     bootstrap.init_app(app)
-    # mail.init_app(app) # Remove mail functionality
-    # moment.init_app(app) # Remove moment functionality
+    # mail.init_app(app) # Commented to remove mail functionality
+    # moment.init_app(app) # Commented to remove moment functionality
     db.init_app(app)
 
-    # Attach routes and custo error pages here wat
+    # Attach routes and custom error pages here wat
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 

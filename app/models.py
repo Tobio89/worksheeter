@@ -4,20 +4,23 @@ from . import db
 
 # SQL DATABASE TABLES
 
-class Grocery(db.Model):
-    __tablename__ = 'groceries'
+class Worksheets(db.Model):
+    __tablename__ = 'worksheets'
     id = db.Column(db.Integer, primary_key=True)
-    itemName = db.Column(db.String(64), unique=True)
-    quantity = db.Column(db.Integer) #Setting quantity to optional so 'rice' doesn't need a quantity
+    title = db.Column(db.String(64))
+    url = db.Column(db.String(64))
+    paragraphs = db.Column(db.String(64))
+    words = db.Column(db.String(64))
+    permanence = db.Column(db.Boolean(), default=False)
+
+
 
     def __repr__(self):
-        return f'<Grocery {self.itemName}>'
+        return f'<Worksheet {self.title}>'
 
     def __str__(self):
         if self.quantity:
-            return f'{self.itemName} x {self.quantity}'
-        else:
-            return f'{self.itemName}'
+            return self.title
 
 
 # This will need to be changed before running
