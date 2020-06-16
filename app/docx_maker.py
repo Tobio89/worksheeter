@@ -63,7 +63,8 @@ def addComprehensionQuestions(para_list, doc):
     for number, question in enumerate(questions):
         p = doc.add_paragraph()
         p.paragraph_format.left_indent = Cm(0.5)
-        p.text = f'{number+1}: {question}'
+        p.text = f'-: {question}'
+        doc.add_paragraph()
     
     return doc
 

@@ -185,6 +185,8 @@ def sheet():
 
         user_article_title = DB_sheet_data.title
         user_article_url = DB_sheet_data.url
+        users_words = DB_sheet_data.words.split('#')
+        article_paragraphs = DB_sheet_data.paragraphs.split('#%#')
     except:
         # User will reach here if they try to go back to a page after the download was performed.
         flash("Your worksheet session has expired! Try making the sheet again.", 'danger')
@@ -212,13 +214,13 @@ def download_file(filename):
     print('Pre-download clean-up...')
     clearOldFiles()
 
-    #Clear old data from DB:
-    #Load data
-    user_sheet_id = session['user-sheet-id']
-    DB_sheet_data = Worksheets.query.filter_by(id=user_sheet_id).first()
-    db.session.delete(DB_sheet_data)
-    db.session.commit()
-    print('Cleared old data from sheet')
+    # #Clear old data from DB:
+    # #Load data
+    # user_sheet_id = session['user-sheet-id']
+    # DB_sheet_data = Worksheets.query.filter_by(id=user_sheet_id).first()
+    # db.session.delete(DB_sheet_data)
+    # db.session.commit()
+    # print('Cleared old data from sheet')
 
 
 

@@ -6,7 +6,7 @@
 {{ super() }}
 <div class="page-header" style="padding-left: 50px;">
     <h1>ESL Auto-Worksheet</h1>
-    <h3>Choose An Article</h3>
+    <h3>Select Vocab Words</h3>
 </div>
 
 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -58,7 +58,7 @@
                     {% endfor %}
                 
                 </div>
-                <!-- <input type="submit" name="submit_article" value="Make My Worksheet!"> -->              
+        
             </form>
             
         </div>
@@ -72,9 +72,27 @@
             function clickedCell(e){
                 let cell = e.target
 
-                cell.classList.toggle('selected')
 
-            }
+
+                if (cell.classList.contains('selectable-word')){ // Prevent selection of overall container :F
+
+
+                        if (cell.classList.contains('selected')){ // if it's selected
+                                cell.classList.remove("selected") //deselect the word
+                                console.log('Deselecting ' + cell.innerText)
+                        } else if (!cell.classList.contains("selected")){ // If it's not selected
+                                cell.classList.add("selected") // select it
+                                console.log('Selecting ' + cell.innerText)
+                        }
+
+
+                } else {
+                    console.log('User selected container by mistake')
+                }
+
+
+            } //func
+
 
             wordContainer.addEventListener('click', clickedCell);
         };
@@ -94,11 +112,11 @@
             const userWordQuant = document.querySelector("#howManyRandomWords").value
             const selectable_words = document.querySelectorAll(".selectable-word")
             const randomWordIndexes = generateRandomIndexes(userWordQuant)
+            console.log('User wants' + userWordQuant + ' words.')
             console.log(userWordQuant)
 
             for (i = 0; i < selectable_words.length; i++ ) {
                 word = selectable_words[i]
-                console.log(word)
 
                 // If that index isn't in the list
                 if (randomWordIndexes.indexOf(i) === -1) {
@@ -120,24 +138,34 @@
     
         function getWordsFromCells() {
             var cells = document.querySelectorAll('.selected')
+            console.log('Found the following cells:')
+            console.log(cells)
 
-            if (cells.length <= 0){ // Cover user failed to select any words - randomly select words for them :)
+            // If there were no cells selected
+            if (cells.length <= 1){ // 1 is used here to prevent the stupid 'all the words is one word' bug - not ideal but a user is unlikely to pick one word only.
+                if (cells.length == 1){
+                    console.log('Prevention of stupid long one word bug activated')
+                }
                 console.log('The user left the cells blank');
                 selectRandomCells();
                 var cells = document.querySelectorAll('.selected');
+                console.log('The following words were selected:')
+                console.log(cells)
             };
 
             let chosenWords = []
 
             for (i=0; i < cells.length; i++) {
                 let word = cells[i].innerText
+                console.log('Selecting the following word:')
                 console.log(word)
                 chosenWords.push(word)
             };
 
-
-
+            // Join words for Flask to read
+            console.log('Joining words...')
             let wordString = chosenWords.join('#')
+            console.log(wordString)
 
             //Apply wordstring to button value
             const button = document.querySelector("#submit_words")
