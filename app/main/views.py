@@ -21,6 +21,11 @@ from ..maintenance import clearOldFiles, timeless
 
 
 # FLASK ROUTES / SITE PAGES
+@main.route('/about')
+def about():
+    return render_template('about.html')
+
+
 
 @main.route('/', methods=['GET', 'POST'])
 def index():

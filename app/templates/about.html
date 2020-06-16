@@ -42,31 +42,33 @@
 
 <div class="container">
 
-    <h3>How To Use Auto-Worksheet</h3>
+    <h3>About Auto-Worksheet</h3>
     <br/>
-    <p>The Auto-Worksheet program lets you enter a search term, and will gather news articles from the CNN website for you to use in your ESL class.</p>
-    <p>Select an article you like and it automatically chooses several notable words and collects the definitions from Dictionary.com</p>
-    <p>You will then be able to download a .docx file containing the article and vocabulary, and three automatically generated fill-in-the-blank questions.
-        <br>The file will also contain three general discussion questions.</p>
-    <p>Auto-Worksheet makes finding articles and producing questions easier for you.
-        Once downloaded, You can either add your own questions, or use the worksheet as-is.
+    <p>Auto-Worksheet is a portfolio project built in Python using the Flask framework.</p>
+    <p>Initial article scraping is done using Selenium<br/>
+        Selenium is able to scrape dynamically loaded content, at the cost of speed.<br/>
+        The remaining scraping is done with BS4.<br/>
+        The worksheet is assembled with Python-DOCX.
     </p>
-    <br>
-    <h4>Begin now!</h4>
-    <form id="CNN-search-terms" method='POST'>
-        <input name="user_search_terms">
-        <input type="button" onclick="submitAndWait()" value="Search!">
-    </form>
-    <script>
-        function submitAndWait() {
-            document.querySelector("#CNN-search-terms").submit();
+    <hr>
+    <h4>About the Creator</h4>
+    <br/>
+    <p>Tobias S is an ESL teacher who currently lives in South Korea, near Hanam, east of Seoul.</p>
+    <p>He is currently developing Python applications in his spare time, but is looking to move into the programming industry soon.</p>
+    <p>He has an M.A in Animation and a B.A in Multimedia</p>
+    <p>He has been teaching in Korea for 5 years, and is now married.</p>
+    <p>He likes 80's and 90's video games, coffee, and long walks outdoors.</p>
+    <hr>
+    <h4>Other Projects</h4>
+    <br/>
+    <p>
+        <ul>
+            <li><a href="https://drive.google.com/file/d/1MMmEvDAfYslYlJCXD2BGay4CZee9Mat1/view?usp=sharing">ESL-Helper</a>: A discord bot for ESL tutors. It posts definitions into the chat, and it can save the chat history as .docx for notes.</li>
+            <li><a href="https://github.com/BruceJi7">Tobias S on Github</a>: Other miscellaneous projects written in Python.</li>
+        </ul>
+    </p>
 
-            const overlay = document.querySelector("#loading-overlay");
-            
-            overlay.style.display = "block";
-            overlay.style.visibility = 'visible';
-        
-        }
-    </script>
+
+
 </div>
 {% endblock %}
