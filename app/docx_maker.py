@@ -6,13 +6,8 @@ from .comprehension import produceCloze
 
 
 
-# main_path = './app/static/download'
-main_path = os.path.join('.', 'app', 'static', 'download')
-
-print('Thing puts doc files in...')
-print(main_path)
-print(os.path.exists(main_path))
-
+# MAIN_PATH = './app/static/download'
+MAIN_PATH = os.path.join('.', 'app', 'static', 'download')
 
 questions = []
 default_questions = [
@@ -104,7 +99,7 @@ def writeDocx(list_format_article, definitionDict, title):
 
     print('writing document...')
     print(filename_DOCX)
-    output_path = os.path.join(main_path, filename_DOCX)
+    output_path = os.path.join(MAIN_PATH, filename_DOCX)
     doc.save(output_path)
 
     return filename_DOCX

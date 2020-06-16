@@ -12,7 +12,7 @@ from . import main
 from ..CNN import getNewsArticles, getArticleContent
 from ..vocab import getAllUniqueWords, getDefinitionsForUserChosenWords, getDefinitionForRandomWords
 from ..docx_maker import writeDocx
-from ..maintenance import clearOldFiles
+from ..maintenance import clearOldFiles, timeless
 
 
 # Constant Variables
@@ -57,7 +57,7 @@ def articles():
 
             # Add these to DB
             print('Added title and URL to DB.')
-            session_worksheet = Worksheets(title=user_selected_article_title, url=user_selected_article_URL)
+            session_worksheet = Worksheets(title=user_selected_article_title, url=user_selected_article_URL, timestamp=timeless(datetime.now()))
             db.session.add(session_worksheet)
             
             #Flush to generate row id - 

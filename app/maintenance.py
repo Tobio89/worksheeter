@@ -6,13 +6,16 @@ DOC_files_path = os.path.join('.', 'app', 'static', 'download')
 # DOC_files_path = r'C:\Users\User\.spyder-py3\Flask\worksheet_maker\app\static\download'
 
 
+def timeless(complete_datetime):
+
+    return datetime(complete_datetime.year, complete_datetime.month, complete_datetime.day)
+
+
 def makeCDate(f_ctime):
     conventional_format = ctime(f_ctime)
     complete_datetime = datetime.strptime(conventional_format, '%a %b %d %H:%M:%S %Y')
 
-    timeless = datetime(complete_datetime.year, complete_datetime.month, complete_datetime.day)
-
-    return timeless
+    return timeless(complete_datetime)
 
 def clearOldFiles():
 

@@ -11,6 +11,7 @@ class Worksheets(db.Model):
     url = db.Column(db.String(64))
     paragraphs = db.Column(db.String(64))
     words = db.Column(db.String(64))
+    timestamp = db.Column(db.DateTime())
     permanence = db.Column(db.Boolean(), default=False)
 
 
