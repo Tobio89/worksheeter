@@ -4,9 +4,11 @@
 
 {% block content %}
 {{ super() }}
-<div class="page-header" style="padding-left: 50px;">
-    <h1>ESL Auto-Worksheet</h1>
-    <h3>Your sheet</h3>
+<div class="container">
+    <div class="page-header">
+        <h1>ESL Auto-Worksheet</h1>
+        <h3>Download Your Sheet:</h3>
+    </div>
 </div>
 
 {% with messages = get_flashed_messages(with_categories=true) %}
