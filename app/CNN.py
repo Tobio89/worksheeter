@@ -1,5 +1,6 @@
 import bs4, requests, random
 from .worksheet_config import BS4Headers
+from os import path
 
 from selenium import webdriver
 # from selenium.webdriver.firefox.options import Options
@@ -9,7 +10,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-
+CHR_PATH = path.join('.','app', 'chromedriver.exe')
+print('Chrome Driver located:')
+print(path.exists(CHR_PATH))
 
 
 
@@ -21,7 +24,7 @@ def getNewsArticles(searchTerms, quantity=30):
 
     options = Options()
     options.add_argument("--headless") # This opens headless (windowless) Chrome/ium
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome(options=options, executable_path=CHR_PATH)
     driver.get(searchURL)
     print('Headless Chrome Initialised...')
     articles = driver.find_elements_by_css_selector("div.cnn-search__results-list div.cnn-search__result-contents")

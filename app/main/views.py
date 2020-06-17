@@ -87,10 +87,14 @@ def articles():
     else: # Initial loading of page - load articles from CNN and show them to the user
         terms = session['search_terms']
         if terms:
+            # Uncomment this to view error message related to selenium.
+            # CNN_articles = getNewsArticles(terms)
             try:
                 CNN_articles = getNewsArticles(terms)
             except:
                 flash(f'Failed to find articles for {terms}!', 'danger')
+                print('WARNING: If this failed, probably the chrome driver has a version issue.')
+                print('Try commenting the try block out and un-commenting the CNN_articles line above to see.')
                 CNN_articles = None
                 return redirect(url_for('main.index'))
         else:
