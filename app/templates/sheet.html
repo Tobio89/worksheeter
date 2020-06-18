@@ -4,12 +4,6 @@
 
 {% block content %}
 {{ super() }}
-<div class="container">
-    <div class="page-header">
-        <h1>ESL Auto-Worksheet</h1>
-        <h3>Download Your Sheet:</h3>
-    </div>
-</div>
 
 {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -43,6 +37,7 @@
 {% endwith %}
 
 <div class="container">
+    <h3 class="blue-title">Download Your Sheet:</h3>
 
     {% if downLink %}
         <p><a href="{{ url_for('main.download_file', filename=downLink) }}">Download your worksheet here!</a></p>

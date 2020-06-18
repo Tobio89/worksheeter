@@ -221,7 +221,7 @@ def sheet():
 @main.route('/download/<filename>')
 def download_file(filename):
     print('Pre-download clean-up...')
-    clearOldFiles()
+    # clearOldFiles()
 
     # #Clear old data from DB:
     # #Load data

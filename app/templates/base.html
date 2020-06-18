@@ -5,7 +5,14 @@
 
 {{ super() }}
 <style>
-
+    .head-logo {
+        width: 600px;
+        height: 82px;
+        background: url("./static/ESL-auto_header.png") no-repeat 0 0 / 600px auto;
+    }
+    .blue-title {
+        color: #003399;
+    }
     #wait-overlay {
         position: fixed; /* Sit on top of the page content */
         display: none; /* Hidden by default */
@@ -168,7 +175,8 @@
         text-align: center;
     }
     .selected {
-        background: red;
+        background: #003399;
+        color: white;
     }
 
 
@@ -228,6 +236,10 @@
     </div>
 </div>
 
+<div class="container">
+    <div class="head-logo">
+    </div>
+</div>
 
 
 {% endblock %}

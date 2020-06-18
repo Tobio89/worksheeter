@@ -4,13 +4,7 @@
 
 {% block content %}
 {{ super() }}
-<div class="container">
-    <div class="page-header">
-        <h1>ESL Auto-Worksheet</h1>
-        <h3>Select Vocab Words:</h3>
-    </div>
-</div>
-    
+ 
 
 {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -44,6 +38,7 @@
 {% endwith %}
 
 <div class="container" style="padding-bottom: 10vh;">
+    <h3 class="blue-title">Select Vocab Words:</h3>
 
     {% if words %}
         <div style="display: flex; justify-content: center;">
