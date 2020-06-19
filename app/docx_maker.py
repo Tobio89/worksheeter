@@ -3,6 +3,7 @@ from docx.shared import Cm
 from .CNN import getNewsArticles, getArticleContent
 # from .vocab import getRandomUniqueWords, getMultipleDefinitions
 from .comprehension import produceCloze
+from .worksheet_config import discussion_questions, comprehension_questions
 
 
 
@@ -10,14 +11,10 @@ from .comprehension import produceCloze
 MAIN_PATH = os.path.join('.', 'app', 'static', 'download')
 
 questions = []
-default_questions = [
-    'Summarise the article in your own words',
-    'How do you feel after reading the article?',
-    "Do you agree with the article's point? Why/why not?",
-    "Can you come up with an argument against this article's point?",
-    'After reading the article, is there anything you are wondering about?',
-    'Does the article relate to something else you read or watched recently?',
-]
+
+
+
+
 
 def addVocaChunk(wordDict, doc):
 
@@ -42,7 +39,7 @@ def addVocaChunk(wordDict, doc):
 
 def addDiscussionQuestions(listOfQuestions, doc):
     if not listOfQuestions:
-        listOfQuestions = default_questions
+        listOfQuestions = discussion_questions
     doc.add_heading('Discussion Questions',3 )
     doc.add_paragraph('')
     for number, question in enumerate(listOfQuestions):
@@ -56,15 +53,23 @@ def addDiscussionQuestions(listOfQuestions, doc):
 def addComprehensionQuestions(para_list, doc):
     questions = produceCloze(para_list)
 
-    doc.add_heading('Cloze Questions',3 )
+    doc.add_heading('Reading Comprehension',3 )
     doc.add_paragraph('')
     doc.add_heading('Fill in the blanks', 5)
     doc.add_paragraph('')
-    for number, question in enumerate(questions):
+    for question in questions:
         p = doc.add_paragraph()
         p.paragraph_format.left_indent = Cm(0.5)
         p.text = f'-: {question}'
         doc.add_paragraph()
+
+    doc.add_page_break()
+    for question in comprehension_questions:
+        p = doc.add_paragraph()
+        p.paragraph_format.left_indent = Cm(0.5)
+        p.text = f'{question}'
+        doc.add_paragraph()
+        
     
     return doc
 
