@@ -6,7 +6,7 @@ from newsapi import NewsApiClient
 
 
 
-API_KEY=environ.get['NEWS_API_KEY'] #add to env later!
+API_KEY=environ.get('NEWS_API_KEY')
 exclusions = ('videos', 'live-news', 'gallery', 'travel', 'underscored') 
 
 newsapi = NewsApiClient(API_KEY)
