@@ -1,6 +1,7 @@
 import docx, random, os
 from docx.shared import Cm
-from .CNN import getNewsArticles, getArticleContent
+# from .CNN import getNewsArticles, getArticleContent
+from .get_news import getArticleContent
 # from .vocab import getRandomUniqueWords, getMultipleDefinitions
 from .comprehension import produceCloze
 from .worksheet_config import discussion_questions, comprehension_questions

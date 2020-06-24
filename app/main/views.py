@@ -9,7 +9,8 @@ from . import main
 
 # from ..tasks import recurringTask, oneTimeTask, getTimelessDate
 
-from ..CNN import getNewsArticles, getArticleContent
+# from ..CNN import getNewsArticles, getArticleContent
+from ..get_news import getNewsArticles, getArticleContent
 from ..vocab import getAllUniqueWords, getDefinitionsForUserChosenWords, getDefinitionForRandomWords
 from ..docx_maker import writeDocx
 from ..maintenance import clearOldFiles, timeless
@@ -88,15 +89,15 @@ def articles():
         terms = session['search_terms']
         if terms:
             # Uncomment this to view error message related to selenium.
-            # CNN_articles = getNewsArticles(terms)
-            try:
-                CNN_articles = getNewsArticles(terms)
-            except:
-                flash(f'Failed to find articles for {terms}!', 'danger')
-                print('WARNING: If this failed, probably the chrome driver has a version issue.')
-                print('Try commenting the try block out and un-commenting the CNN_articles line above to see.')
-                CNN_articles = None
-                return redirect(url_for('main.index'))
+            CNN_articles = getNewsArticles(terms)
+            # try:
+            #     CNN_articles = getNewsArticles(terms)
+            # except:
+            #     flash(f'Failed to find articles for {terms}!', 'danger')
+            #     print('WARNING: If this failed, probably the chrome driver has a version issue.')
+            #     print('Try commenting the try block out and un-commenting the CNN_articles line above to see.')
+            #     CNN_articles = None
+            #     return redirect(url_for('main.index'))
         else:
             terms = None
             CNN_articles = None

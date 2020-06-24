@@ -56,7 +56,7 @@
             <form id="select-article" method="POST">
 
                 {% for art in articles %}
-                    <p><input type="radio" name="user_selected_article" value="{{art.href}}%{{art.head}}"><a class='article-link' href={{art.href}}>{{art.head}}</a></p>
+                    <p><input type="radio" name="user_selected_article" value="{{art.url}}%{{art.title}}"><a class='article-link' href={{art.url}}>{{art.title}}</a></p>
                 {% endfor %}
 
                 <!-- <input type="submit" name="submit_article" value="Make My Worksheet!"> -->
