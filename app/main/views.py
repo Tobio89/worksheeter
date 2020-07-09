@@ -48,11 +48,17 @@ def custom():
         if 'user_custom_text' in request.form:
             user_submitted_text = request.form.get('user_custom_text')
             
+            if user_submitted_text:
             # Clean up the user's text
             # Remove unicode chars, split into paragraphs, remove blank lines and lines with square braces
-            user_submitted_paragraphs = cleanUpAndSplitText(user_submitted_text)
+                user_submitted_paragraphs = cleanUpAndSplitText(user_submitted_text)
+            
+            else: #Cover user submitting blank form
 
-            flash('submission', 'info')
+                flash('Oops! No text was found in the box', 'warning')
+                return redirect(url_for('main.custom'))
+
+        
         
         if not user_title:
             user_title = user_submitted_paragraphs[0][:30]
