@@ -27,7 +27,6 @@ def about():
     return render_template('about.html')
 
 
-
 @main.route('/', methods=['GET', 'POST'])
 def index():
 
@@ -39,6 +38,47 @@ def index():
             return redirect(url_for('main.articles'))
 
     return render_template('index.html')
+
+@main.route('/custom', methods=['GET', 'POST'])
+def custom():
+
+    if request.method == 'POST':
+        if 'user_text_title' in request.form:
+            user_title = request.form.get('user_text_title')
+        if 'user_custom_text' in request.form:
+            user_submitted_text = request.form.get('user_custom_text')
+            
+            # Clean up the user's text
+            user_submitted_text = user_submitted_text.replace('\r', '\n') #Remove \r newlines
+            user_submitted_text = user_submitted_text.replace('\t', '\n') #Remove \t newlines
+            user_submitted_paragraphs = user_submitted_text.split('\n\n') #Split at every double-\n newlines
+            user_submitted_paragraphs = [par for par in user_submitted_paragraphs if par] #Discard blank paragraphs
+
+
+            flash('submission', 'info')
+        
+        if not user_title:
+            user_title = user_submitted_paragraphs[0][:30]
+
+        print('Added title and URL to DB.')
+        session_worksheet = Worksheets(title=user_title, url=None, timestamp=timeless(datetime.now()), paragraphs='#%#'.join(user_submitted_paragraphs))
+        db.session.add(session_worksheet)
+            
+        #Flush to generate row id - 
+        # save this to session to allow working on same data across multiple pages.
+        db.session.flush()
+        user_sheet_id = session_worksheet.id
+        session['user-sheet-id'] = user_sheet_id
+        print(user_sheet_id)
+
+        db.session.commit()
+
+        return redirect(url_for('main.words'))
+
+
+
+    return render_template('custom.html')
+
 
 
 
@@ -151,20 +191,24 @@ def words():
          
         print(f'Getting words for {user_article_title}')
 
-        try:
-            #Get the paragraphs from the actual article
-            article_paragraphs = getArticleContent(user_article_url)
-            
-            # Join paras into DB-compatible string, save to DB
-            joined_paras = '#%#'.join(article_paragraphs)
-            print('Saving paragraphs to DB...')
-            DB_sheet_data.paragraphs = joined_paras
-            db.session.commit()
+        # Check that paragraphs don't already exist - meaning it's an API-loaded article
+        if not DB_sheet_data.paragraphs:
+            try:
+                #Get the paragraphs from the actual article
+                article_paragraphs = getArticleContent(user_article_url)
+                
+                # Join paras into DB-compatible string, save to DB
+                joined_paras = '#%#'.join(article_paragraphs)
+                print('Saving paragraphs to DB...')
+                DB_sheet_data.paragraphs = joined_paras
+                db.session.commit()
 
-        except:
-            # This tends to happen if the article doesn't have the right CSS tags
-            print('Failed to extract paragraph data')
-            flash('Failed to extract paragraph data! Sorry :(', 'danger')
+            except:
+                # This tends to happen if the article doesn't have the right CSS tags
+                print('Failed to extract paragraph data')
+                flash('Failed to extract paragraph data! Sorry :(', 'danger')
+        else:
+            article_paragraphs = DB_sheet_data.paragraphs.split('#%#')
 
         # Parse words from paras so user can select them
         try:

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}{{ super() }}Custom Text Source{% endblock %}
+
+{% block content %}
+{{ super() }}
+
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="container">
+            {% for category, message in messages %}
+                <p>
+                
+                <div class="alert alert-{{category}}" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>
+                        {% if category == 'info' %}
+                            Information:
+                        {% elif category == 'danger' %}
+                            ERROR:
+                        {% elif category == 'success' %}
+                            Success:
+                        {% else %}
+                            {{category}}
+                        {% endif %}
+                    </strong>
+                        
+                    <br>{{ message }}
+            {% endfor %}
+                
+                </div>
+                </p>
+        </div>
+        {% endif %}
+{% endwith %}
+
+<div class="container">
+
+    <h3 class="blue-title">Custom Text Source:</h3>
+
+    <p>
+        If you have your own text that you want to turn into a worksheet, paste it in the box below.
+    </p>
+        <form id="custom-text-input" method='POST' style="padding:20px;">
+            <label for="user_text_title">Worksheet Title:</label><br/>
+            <input name="user_text_title"><br/><br/>
+            <label for="user_custom_text">Worksheet Text:</label></br>
+            <textarea name="user_custom_text" style='width:100%; height:200px;'></textarea>
+            <input type="button" onclick="submitAndWait()" value="Submit!">
+        </form>
+    <!-- </p> -->
+</div>
+<div class="container">
+        <h3 class="blue-title">Using Your Own Text</h3>
+        <p>
+            
+            The Auto-Worksheet app can accept copy-and-pasted text.<br/>
+            The app will treat every double-new line as a paragraph for the purposes of generating fill-in-the-blank questions.
+            Make sure your text is formatted well to avoid any issues!
+        
+        </p>
+        <p>
+            You can use the following sources of text in the Auto-Worksheet app:
+                <ul>
+                    <li>A custom-written document</li>
+                    <li>Any document on your computer</li>
+                    <li>Anything else you can copy and paste!</li>
+                    <li>Turn a scanned page into text with OCR and paste it in</li>
+                    <li>Download the subtitles for YouTube videos and generate a listening/discussion worksheet!</li>
+                </ul>
+             
+        </p>
+
+   
+    
+    <script>
+        function submitAndWait() {
+            document.querySelector("#custom-text-input").submit();
+
+            const overlay = document.querySelector("#loading-overlay");
+            
+            overlay.style.display = "block";
+            overlay.style.visibility = 'visible';
+        
+        }
+    </script>
+</div>
+{% endblock %}
+<p>
+    
+</p>
