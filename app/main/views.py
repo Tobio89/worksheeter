@@ -13,7 +13,7 @@ from . import main
 from ..get_news import getNewsArticles, getArticleContent
 from ..vocab import getAllUniqueWords, getDefinitionsForUserChosenWords, getDefinitionForRandomWords
 from ..docx_maker import writeDocx
-from ..maintenance import clearOldFiles, timeless
+from ..maintenance import clearOldFiles, timeless, cleanUpAndSplitText
 
 
 # Constant Variables
@@ -49,11 +49,8 @@ def custom():
             user_submitted_text = request.form.get('user_custom_text')
             
             # Clean up the user's text
-            user_submitted_text = user_submitted_text.replace('\r', '\n') #Remove \r newlines
-            user_submitted_text = user_submitted_text.replace('\t', '\n') #Remove \t newlines
-            user_submitted_paragraphs = user_submitted_text.split('\n\n') #Split at every double-\n newlines
-            user_submitted_paragraphs = [par for par in user_submitted_paragraphs if par] #Discard blank paragraphs
-
+            # Remove unicode chars, split into paragraphs, remove blank lines and lines with square braces
+            user_submitted_paragraphs = cleanUpAndSplitText(user_submitted_text)
 
             flash('submission', 'info')
         

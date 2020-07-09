@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from time import ctime
+from unicodedata import normalize
 
 DOC_files_path = os.path.join('.', 'app', 'static', 'download')
 # DOC_files_path = r'C:\Users\User\.spyder-py3\Flask\worksheet_maker\app\static\download'
@@ -33,4 +34,27 @@ def clearOldFiles():
         if f_datetime < today:
             # print('pretend to delete')
             os.remove(f_path)
-# clearOldFiles()
+
+def standardizeNewLinesAndSplit(text):
+    text = text.replace('\r', '\n') #Remove \r newlines
+    text = text.replace('\t', '\n') #Remove \t newlines
+    text = text.split('\n\n')
+
+    return text
+
+def removeBlankLines(paragraphs_list):
+    return [par for par in paragraphs_list if par]
+
+def removeSquareBraceLines(paragraphs_list):
+    return [par for par in paragraphs_list if '[' not in par]
+
+def normaliseUnicodeCharacters(text):
+    return normalize('NFC', text)
+
+def cleanUpAndSplitText(text):
+    text = normaliseUnicodeCharacters(text)
+    par_list = standardizeNewLinesAndSplit(text)
+    par_list = removeSquareBraceLines(par_list)
+    par_list = removeBlankLines(par_list)
+
+    return par_list
