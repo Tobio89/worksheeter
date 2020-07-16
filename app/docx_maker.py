@@ -8,7 +8,11 @@ from .worksheet_config import discussion_questions, comprehension_questions
 
 
 # MAIN_PATH = './app/static/download'
-MAIN_PATH = os.path.join('.', 'static', 'download')
+base_directory = os.path.abspath(os.path.dirname(__file__))
+print(base_directory)
+
+MAIN_PATH = os.path.join(base_directory, 'static', 'download')
+
 print(f'Output path is {MAIN_PATH}')
 print(f'Exists: {os.path.exists(MAIN_PATH)}')
 
