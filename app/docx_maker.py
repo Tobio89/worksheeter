@@ -203,6 +203,8 @@ def writeDocx(list_format_article, definitionDict, title):
     print(filename_DOCX)
     output_path = os.path.join(MAIN_PATH, filename_DOCX)
     doc.save(output_path)
+    print('File was saved...')
+    print(os.path.exists(output_path))
 
     return filename_DOCX
 
