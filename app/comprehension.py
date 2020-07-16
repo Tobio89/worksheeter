@@ -23,7 +23,7 @@ def produceCloze(listOfParas):
             print('Skipping short paragraph')
             continue
 
-        cloze_word_limit = len(paraList) // 3
+        cloze_word_limit = len(paraList) // 7
 
         indexes_to_replace = random.sample(range(0, len(paraList)-1,), cloze_word_limit)
 
