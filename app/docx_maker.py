@@ -1,5 +1,6 @@
 import docx, random, os
 from docx.shared import Cm
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 # from .CNN import getNewsArticles, getArticleContent
 from .get_news import getArticleContent
 # from .vocab import getRandomUniqueWords, getMultipleDefinitions
@@ -28,7 +29,10 @@ def capitalizeEveryWord(s):
 
 def addTitlePage(title, doc):
     
+    
     doc.add_picture(os.path.join('.', 'app', 'static', 'ESL-auto_header.png'), width=Cm(14))
+    image_para = doc.paragraphs[-1]
+    image_para.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
     
     doc.add_paragraph()
     doc.add_paragraph()
@@ -85,7 +89,7 @@ def addVocabClozeQuestions(wordDict, doc):
 
     random.shuffle(question_source)
 
-    doc.add_heading('Vocab Questions',3 )
+    doc.add_heading('Vocabulary Questions', 2)
     doc.add_paragraph('')
     doc.add_heading('Fill in the blanks using the words in the table', 5)
     doc.add_paragraph('')
@@ -107,7 +111,7 @@ def addVocabClozeQuestions(wordDict, doc):
 def addDiscussionQuestions(listOfQuestions, doc):
     if not listOfQuestions:
         listOfQuestions = discussion_questions
-    doc.add_heading('Discussion Questions',3 )
+    doc.add_heading('General Discussion',3 )
     doc.add_paragraph('')
     for number, question in enumerate(listOfQuestions):
         p = doc.add_paragraph()
@@ -120,7 +124,7 @@ def addDiscussionQuestions(listOfQuestions, doc):
 def addParagraphClozeQuestions(para_list, doc):
     questions = produceCloze(para_list)
 
-    doc.add_heading('Reading Comprehension', 3)
+    doc.add_heading('Paragraph Quiz', 3)
     doc.add_paragraph('')
     doc.add_heading('Fill in the blanks', 5)
     doc.add_paragraph('')
@@ -134,7 +138,7 @@ def addParagraphClozeQuestions(para_list, doc):
 
 def addReadingCompTemplateQuestions(doc):
 
-    doc.add_heading('Comprehension Questions', 5)
+    doc.add_heading('Comprehension Questions', 3)
     doc.add_paragraph()
     for question in comprehension_questions:
         p = doc.add_paragraph()
@@ -183,8 +187,7 @@ def writeDocx(list_format_article, definitionDict, title):
     
     doc.add_heading('Comprehension Questions', 1)
     doc.add_paragraph('')
-    doc.add_heading('Vocabulary Questions', 2)
-    doc.add_paragraph('')
+    
     # Add vocab cloze questions
     doc = addVocabClozeQuestions(definitionDict, doc)
     doc.add_page_break()
