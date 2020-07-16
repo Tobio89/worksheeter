@@ -10,6 +10,8 @@ from .worksheet_config import discussion_questions, comprehension_questions
 
 # MAIN_PATH = './app/static/download'
 MAIN_PATH = os.path.join('.', 'app', 'static', 'download')
+print(f'Output path is {MAIN_PATH}')
+print(f'Exists: {os.path.exists(MAIN_PATH)}')
 
 questions = []
 
@@ -145,7 +147,7 @@ def writeDocx(list_format_article, definitionDict, title):
     # Produce a title with sensible length
     alnumTitle = ''.join([i for i in title if i.isalnum() or i==' ']) # Remove special characters that prevent file saving.
     if len(alnumTitle.split(' ')) > 12:
-        filename_title = '_'.join(alnumTitle.split(' ')[:12])
+        filename_title = '_'.join(alnumTitle.split(' ')[:6])
     else:
         filename_title = alnumTitle
 
