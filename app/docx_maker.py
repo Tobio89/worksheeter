@@ -5,11 +5,11 @@ from .get_news import getArticleContent
 # from .vocab import getRandomUniqueWords, getMultipleDefinitions
 from .comprehension import produceCloze
 from .worksheet_config import discussion_questions, comprehension_questions
-
+from ..config import basedir
 
 
 # MAIN_PATH = './app/static/download'
-MAIN_PATH = os.path.join('.', 'app', 'static', 'download')
+MAIN_PATH = os.path.join(basedir, 'app', 'static', 'download')
 print(f'Output path is {MAIN_PATH}')
 print(f'Exists: {os.path.exists(MAIN_PATH)}')
 
