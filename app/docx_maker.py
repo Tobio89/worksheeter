@@ -145,7 +145,7 @@ def writeDocx(list_format_article, definitionDict, title):
     # Produce a title with sensible length
     alnumTitle = ''.join([i for i in title if i.isalnum() or i==' ']) # Remove special characters that prevent file saving.
     if len(alnumTitle.split(' ')) > 12:
-        filename_title = ' '.join(alnumTitle.split(' ')[:12])
+        filename_title = '_'.join(alnumTitle.split(' ')[:12])
     else:
         filename_title = alnumTitle
 
