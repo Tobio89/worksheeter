@@ -282,5 +282,5 @@ def download_file(filename):
 
 
 
-    return send_from_directory(directory='./static/download', filename=filename, as_attachment=True)
+    return send_from_directory(directory='./static/downloads', filename=filename, as_attachment=True)
     
