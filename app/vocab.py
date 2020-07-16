@@ -240,14 +240,12 @@ def getExampleForWord(word):
 
     # print(soup)
     # word_heading_section = soup.select("#top-definitions-section")
-    examples = soup.find_all('div', class_='sentence component', limit=5)
+    example = soup.find('div', class_='sentence component')
 
-    ex_text = [ex.text for ex in examples]
 
-    if ex_text:
-
-        random_example = random.choice(ex_text)
-        split_for_cloze_example = random_example.split()
+    if example:
+        ex_text = example.text
+        split_for_cloze_example = ex_text.split()
 
         for i in range(len(split_for_cloze_example)):
             
@@ -260,13 +258,6 @@ def getExampleForWord(word):
     else:
 
         return []
-
-def addExampleToWordDict(word_dict):
-
-    for word in word_dict:
-        word_dict[word]['example'] = getExampleForWord(word)
-
-    return word_dict
 
 
 # print(getMultipleDefinitions(getRandomUniqueWords(test_article_contents)))
