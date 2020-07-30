@@ -4,6 +4,7 @@ import bs4, requests, re, random, time
 from pprint import pprint
 from PyDictionary import PyDictionary
 from nltk.stem import WordNetLemmatizer
+nltk.download('wordnet')
 dictionary = PyDictionary()
 lem = WordNetLemmatizer()
 
