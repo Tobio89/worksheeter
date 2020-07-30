@@ -41,27 +41,30 @@
     <h3 class="blue-title">Choose an Article:</h3>
 
     {% if chosen_terms %}
-        <p>CNN articles about: {{chosen_terms}}</p>
+        <p>CNN articles about: <span style="font-weight:bold;">{{chosen_terms}}</span></p>
         <p>We recommend reading the article, and if you like it, select it and get your worksheet.</p>
     {% endif %}
 
 
     {% if articles %}
         <div>
-        <style>
-            .article-link{
-                padding-left: 10px;
-            }
-        </style>
-            <form id="select-article" method="POST">
+            <div style="width:inherit; padding:10px;text-align: center;">
+                <button id="submit_article" type="submit" name="submitted_article" formmethod="POST">Submit Chosen Article</button>
+            </div>
+                <div class="article-container">
+                    {% for art in articles %}
+                        <div class="article-unit">
+                            <div class="article-title">{{art.title}}</div>
+                            <div class="article-description">{{art.description}}</div>
+                            <div class="article-url"><a href={{art.url}}>Read the article</a></div>
+                        </div>
+                        <!-- <p><input type="radio" name="user_selected_article" value="{{art.url}}%{{art.title}}"><a class='article-link' href={{art.url}}>{{art.title}}</a></p> -->
+                    {% endfor %}
+                </div>
 
-                {% for art in articles %}
-                    <p><input type="radio" name="user_selected_article" value="{{art.url}}%{{art.title}}"><a class='article-link' href={{art.url}}>{{art.title}}</a></p>
-                {% endfor %}
+                <!-- <input type="submit" name="submit_article" value="Make My Worksheet!">
+                <input type="button" name="submit_article" onclick="selectAndWait()" value="Make My Worksheet!"> -->
 
-                <!-- <input type="submit" name="submit_article" value="Make My Worksheet!"> -->
-                <input type="button" name="submit_article" onclick="selectAndWait()" value="Make My Worksheet!">
-            </form>
         </div>
     {% endif %}
 
@@ -73,6 +76,40 @@
             document.querySelector("#loading-overlay").style.display = "block";
 
         }
+
+        function selectWords() {
+            const artContainer = document.querySelector('.article-container');
+            const artUnits = document.querySelectorAll('.article-unit');
+            function clickedCell(e){
+                let cell = e.target;
+
+                while (!cell.classList.contains('article-unit')) {
+                    cell = cell.parentNode;
+                };
+
+                console.log(cell)
+
+
+                if (cell.classList.contains('article-unit')){ // Prevent selection of overall container :F
+
+                        for (i = 0; i < artUnits.length; i++) {
+                            unit = artUnits[i];
+                            unit.classList.remove("selected-article")
+                        };
+                        
+                        cell.classList.add("selected-article");
+
+
+
+                } else {
+                    console.log('User selected container by mistake')
+                }
+
+
+            }
+            artContainer.addEventListener('click', clickedCell);
+        };
+        selectWords();
     </script>
 </div>
 
