@@ -2,50 +2,69 @@ from .worksheet_config import common_words, BS4Headers
 # from CNN import test_article_contents # Change this later
 import bs4, requests, re, random, time
 from pprint import pprint
-
-
+from PyDictionary import PyDictionary
+from nltk.stem import WordNetLemmatizer
+dictionary = PyDictionary()
+lem = WordNetLemmatizer()
 
 
 # paragraph_divided = test_article_contents
+
 
 def getAllUniqueWords(listOfParagraphs):
 
     '''
     Takes a list containing paragraphs of content, and returns a filtered list of all the unique words.
     '''
-
+    exclude_list = ("you'", "hasn", "we'" , "cnn")
     words = (' ').join(listOfParagraphs) #Turn the paragraph into list of words.
 
-    onlyWordCharacters = ''.join([i.lower() for i in words if i.isalpha() or i==' ' or i=="'" or i=='-'])
+    onlyWordCharacters = ''.join([i.lower() for i in words if i.isalpha() or i in (' ', "'", '-', '(', ')')])
 
     wordList = set(onlyWordCharacters.split(' '))
     remove_apostrophe_S_words_etc = []
     for word in wordList:
 
-
-        if len(word) < 4: # Skip short words
+        #Ditch complicated hyphenated words (they almost never show up in the dictionary)
+        if '-' in word:
 
             continue
 
+        
+        # If the word is in brackets, remove them
+        if word.startswith('('):
+            word = word[1:]
+
+        if word.endswith(')'):
+            word = word[:-1]
+
+        # Screw it, if there is still a bracket in there, that word sucks anyway
+        if '(' in word or ')' in word:
+            continue
+        
+        #Remove 's from possessive words
         if word.endswith("'s"):
-            word =word[:-2]
-        elif word.startswith('cnn'):
+            word = word[:-2]
+        
  
-            continue #Ditch the first word that contains CNN.
-        if "you'" in word or "hasn'" in word or "we'" in word: #Throw away these common words
 
-            continue
-        if word[0].isalpha() == False: #Discard weird hyphen-first words
- 
-            continue
-
-
+        #Most people know most short words, discard them
         if len(word) < 4:
             continue
-        else:
-            remove_apostrophe_S_words_etc.append(word)
 
-                
+        #Finally, check against exclude list
+        skip = False
+        for ex in exclude_list:
+            if ex in word:
+                skip = True
+                break
+        if skip == True:
+            continue
+        
+        remove_apostrophe_S_words_etc.append(lem.lemmatize(word, 'v'))
+
+
+               
     wordList = set(remove_apostrophe_S_words_etc) #Use set to remove duplicates.
 
     significantWordList = [word for word in wordList if word not in common_words]
@@ -65,98 +84,26 @@ def getRandomWordsFromParagraph(listOfParagraphs, sample=6):
 
 
 def getDefinitionFromDictSite(word):
-    '''
-    Given a single word, searches for definition on web and returns most uses for that word.  Returns a dict.
 
-    Parameters:
-    word: Single word as string.
-
-    '''
-
-    
-    dictionary_url = 'https://www.dictionary.com/browse/'
-
-
-    res = requests.get(f'{dictionary_url}{word}', headers=BS4Headers)
-    res.raise_for_status()
-
-    soup = bs4.BeautifulSoup(res.text, features='html.parser')
-
-    # word_heading_section = soup.select("#top-definitions-section")
-    heading = soup.select('.css-1jzk4d9')
-    if heading:
-        print(f'Found word {heading[0].text}')
-    top_definitions_section = soup.select('.css-1urpfgu.e16867sm0')[0] # Dict site uses this class to contain definitions chunk. We just want the top.
-    
-    # Get IPA for the word
-    IPA_pron = top_definitions_section.select('.pron-ipa-content.css-z3mf2.evh0tcl2')[0].text
-
-    definitions = top_definitions_section.select('.css-pnw38j.e1hk9ate0') #This contains each definition. Iterate over this
-
-    found_definitions_dict = {}
-    for c in definitions:
-
-        part_of_speech = c.select('.luna-pos')[0].text.capitalize() #Noun, Verb, etc
-        all_defs = c.select('.e1hk9ate4')
-
-        definition_text = [] # List of all text-only definitions
-        
-
-        for definition_paragraph in all_defs: #For each chunk of definitions given for the part of speech...
-
-            default_content = definition_paragraph.select('.default-content') #Check if there is the expandable cell
-            if default_content:
-
-                for definition_text_span in default_content: #For each actual entry inside this
-                    for content in definition_text_span.select('.e1q3nk1v3'): #Get the text content from it.
-
-                        definition_text_span = content.text
-
-                        for luna_example in content.select('.luna-example'): # Find the example sentences
-                            example_sentence = luna_example.text
-
-                            # The definition text comes with the example sentence. Remove the example sentence from the definition.
-                            definition_text_span = definition_text_span.replace(example_sentence, '')
-
-                        
-                        
-                        if definition_text_span.endswith(': '):
-                            definition_text_span = definition_text_span[:-2]
-                        definition_text.append(definition_text_span)
-
-            else: #No expandable content in cell
-
-                for content in definition_paragraph.select('.e1q3nk1v3'): #Grab all content.
-
-                    definition_text_span = content.text
-                    
-                    
-                    if definition_text_span.endswith(': '):
-                        definition_text_span = definition_text_span[:-2]
-
-                    definition_text.append(definition_text_span)
-                    
-                    # definition_text.append(content.text)
-
-        found_definitions_dict[part_of_speech] = definition_text
-
-
-    # Search for example
-    print(f'Searching for example for {word}')
     try:
-        example_sentence = getExampleForWord(word)
+        found_definitions_dict = dictionary.meaning(word)
+
+         # Search for example
+        print(f'Searching for example for {word}')
+        try:
+            example_sentence = getExampleForWord(word)
+        except:
+            print('An error occurred getting the example')
+            example_sentence = []
+
+        found_definitions_dict['examples'] = example_sentence
+
+        return found_definitions_dict
+    
+    
     except:
-        print('An error occurred getting the example')
-        example_sentence = []
+        print(f'Word {word} was missing from the dictionary')
 
-    found_definitions_dict['examples'] = example_sentence
-
-
-
-    return found_definitions_dict  
-
-
-      
 def getDefinitionForRandomWords(listOfWords, sample=6):
 
     defined_words = {}
@@ -217,12 +164,14 @@ def getDefinitionsForUserChosenWords(wordList):
         print(f'Working on: {word}')
         try:
             result = getDefinitionFromDictSite(word)
-            defined_words[word.capitalize()] = result
+            if result:
+                defined_words[word.capitalize()] = result
+            else:
+                print(f'Dictionary returned None, {word} excluded.')
         except:
             print(f'Could not find this word: {word}')
     
     # defined_words_with_examples = addExampleToWordDict(defined_words)
-    
     return defined_words
 
 def getExampleForWord(word):

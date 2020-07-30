@@ -39,6 +39,7 @@ def getNewsArticles(search_term):
                         'title' : raw_art['title'], 
                         'source' : raw_art['source']['name'], 
                         'url' : raw_art['url'],
+                        'description' : raw_art['description']
                     }
                     articles_list.append(a)
             if articles_list:
