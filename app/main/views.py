@@ -214,14 +214,14 @@ def words():
             article_paragraphs = DB_sheet_data.paragraphs.split('#%#')
 
         # Parse words from paras so user can select them
-        try:
-            unique_words_in_paragraph = getAllUniqueWords(article_paragraphs)
+        # try:
+        unique_words_in_paragraph = getAllUniqueWords(article_paragraphs)
 
 
-        except:
-            print('Failed to gather words')
-            flash('Failed to gather words! Sorry :(', 'danger')
-            return(redirect(url_for('main.index')))
+        # except:
+        #     print('Failed to gather words')
+        #     flash('Failed to gather words! Sorry :(', 'danger')
+        #     return(redirect(url_for('main.index')))
 
     
 
