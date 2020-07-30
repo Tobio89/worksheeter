@@ -89,13 +89,15 @@ def custom():
 def articles():
 
     # If the user submits the form, save the title and url to DB for further use.
-    if request.method == 'POST': 
+    if request.method == 'POST':
+
 
         # The form was submitted correctly
-        if 'user_selected_article' in request.form:
+        if 'submitted_article' in request.form:
 
             #Load title/url data from form        
-            form_response = request.form.get('user_selected_article')
+            form_response = request.form.get('submitted_article')
+            
 
             #Split into separate variables
             form_response_split = form_response.split('%')

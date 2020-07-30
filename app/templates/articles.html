@@ -12,27 +12,29 @@
             {% for category, message in messages %}
                 <p>
                 
-                <div class="alert alert-{{category}}" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <strong>
-                        {% if category == 'info' %}
-                            Information:
-                        {% elif category == 'danger' %}
-                            ERROR:
-                        {% elif category == 'success' %}
-                            Success:
-                        {% else %}
-                            {{category}}
-                        {% endif %}
-                    </strong>
-                        
-                    <br>{{ message }}
-            {% endfor %}
+                    <div class="alert alert-{{category}}" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+
+                        <strong>
+                            {% if category == 'info' %}
+                                Information:
+                            {% elif category == 'danger' %}
+                                ERROR:
+                            {% elif category == 'success' %}
+                                Success:
+                            {% else %}
+                                {{category}}
+                            {% endif %}
+                        </strong>
+                            
+                        <br>{{ message }}
                 
-                </div>
+                    
+                    </div>
                 </p>
+            {% endfor %}
         </div>
         {% endif %}
 {% endwith %}
@@ -47,17 +49,20 @@
 
 
     {% if articles %}
+    <form id="select-article" method="POST" onsubmit="return submitAndWait();">
         <div>
             <div style="width:inherit; padding:10px;text-align: center;">
                 <button id="submit_article" type="submit" name="submitted_article" formmethod="POST">Submit Chosen Article</button>
             </div>
                 <div class="article-container">
                     {% for art in articles %}
+                    <div class="article-unit-container">
                         <div class="article-unit">
                             <div class="article-title">{{art.title}}</div>
                             <div class="article-description">{{art.description}}</div>
                             <div class="article-url"><a href={{art.url}}>Read the article</a></div>
                         </div>
+                    </div>
                         <!-- <p><input type="radio" name="user_selected_article" value="{{art.url}}%{{art.title}}"><a class='article-link' href={{art.url}}>{{art.title}}</a></p> -->
                     {% endfor %}
                 </div>
@@ -66,11 +71,22 @@
                 <input type="button" name="submit_article" onclick="selectAndWait()" value="Make My Worksheet!"> -->
 
         </div>
+    </form>
     {% endif %}
 
 
     <script>
-        function selectAndWait() {
+        function submitAndWait() {
+            const selected_article = document.querySelector(".selected-article")
+            const article_title = selected_article.querySelector('.article-title').textContent
+            const article_url = selected_article.querySelector('a').getAttribute('href')
+
+            const submission = [article_url, article_title]
+            const submission_button_value = submission.join('%')
+            console.log(submission_button_value)
+            
+            const button = document.querySelector("#submit_article")
+            button.value = submission_button_value
             document.querySelector("#select-article").submit();
             
             document.querySelector("#loading-overlay").style.display = "block";
@@ -81,22 +97,23 @@
             const artContainer = document.querySelector('.article-container');
             const artUnits = document.querySelectorAll('.article-unit');
             function clickedCell(e){
-                let cell = e.target;
+                let cell = e.target
 
+                // Move up a level if the child cells were clicked
                 while (!cell.classList.contains('article-unit')) {
-                    cell = cell.parentNode;
-                };
+                    cell = cell.parentNode
+                    };
 
                 console.log(cell)
 
 
                 if (cell.classList.contains('article-unit')){ // Prevent selection of overall container :F
-
+                        // Deselect all cells
                         for (i = 0; i < artUnits.length; i++) {
                             unit = artUnits[i];
                             unit.classList.remove("selected-article")
                         };
-                        
+                        // Select only selected cell
                         cell.classList.add("selected-article");
 
 
