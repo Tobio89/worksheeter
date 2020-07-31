@@ -47,12 +47,16 @@
                         
                         <input type="button" name="randomize_words" onclick="selectRandomCells()" value="Select Random Words">
                         <input type="number" id="howManyRandomWords" min='1' max="20" value="6">
-                        <button id="submit_words" type="submit" name="submitted_words" formmethod="POST">Submit Chosen Words</button>
+                        <button type="button" id="show_hide" style="width: 160px;"data-hidden=1 onclick="toggle_hidden()">See All Words</button>
+                        <button id="submit_words" type="submit" name="submitted_words" formmethod="POST" style="margin-left: 20px;">Submit Chosen Words</button>
+                        
+                        
                 </div>
+                
                 <div class="word-selection-container">
 
                     {% for word in words %}
-                        <div class="selectable-word">{{word}}</div>
+                        <div class="selectable-word unselected">{{word}}</div>
                     {% endfor %}
                 
                 </div>
@@ -64,6 +68,80 @@
 
 
     <script>
+        
+        function show_hide_words(){
+            const hidden_state = document.querySelector("#show_hide").getAttribute("data-hidden");
+            const selectable_words = document.querySelectorAll('.selectable-word');
+            console.log('Hidden state = ' + hidden_state)
+
+            if (hidden_state == '1') {
+                
+                for (i = 0; i < selectable_words.length; i++) {
+                    cell = selectable_words[i]
+                    if (!cell.classList.contains('selected')) {
+                        cell.classList.add("hidden")
+                    } else {
+                        cell.classList.remove("hidden")
+                    };
+                }
+            
+            } else {
+                for (i = 0; i < selectable_words.length; i++) {
+                    cell = selectable_words[i]
+                    cell.classList.remove("hidden")
+                    }
+                }
+
+            } // End of show_hide_words
+
+        function selectRandomCells() {
+            const userWordQuant = document.querySelector("#howManyRandomWords").value
+            const selectable_words = document.querySelectorAll(".selectable-word")
+            const randomWordIndexes = generateRandomIndexes(userWordQuant)
+            console.log('User wants' + userWordQuant + ' words.')
+            console.log(userWordQuant)
+
+            for (i = 0; i < selectable_words.length; i++ ) {
+                word = selectable_words[i]
+
+                // If that index isn't in the list
+                if (randomWordIndexes.indexOf(i) === -1) {
+                    
+                    if (word.classList.contains('selected')){ // if it's selected
+                        word.classList.remove("selected") //deselect the word
+                        word.classList.add("unselected")
+                    };
+                
+                // If the word index IS in the list (please select)
+                } else { 
+                    if (!word.classList.contains("selected")){ // If it's not selected
+                        word.classList.remove("unselected")
+                        word.classList.add("selected") // select it
+                    }
+
+                };
+            };
+            show_hide_words();
+
+        };
+        
+        selectRandomCells()
+        show_hide_words()
+
+        function toggle_hidden(){
+            const hide_button = document.querySelector("#show_hide")
+            let hide_state = hide_button.getAttribute('data-hidden')
+
+            if (hide_state == '1') {
+                hide_button.setAttribute("data-hidden", "0")
+                console.log('User requests words to be shown')
+            } else {
+                hide_button.setAttribute("data-hidden", "1")
+                console.log('User requests words to be hidden')
+            }
+            show_hide_words()
+        }
+
         function selectWords() {
             const wordContainer = document.querySelector('.word-selection-container');
 
@@ -77,6 +155,7 @@
 
                         if (cell.classList.contains('selected')){ // if it's selected
                                 cell.classList.remove("selected") //deselect the word
+                                cell.classList.add("hidden")
                                 console.log('Deselecting ' + cell.innerText)
                         } else if (!cell.classList.contains("selected")){ // If it's not selected
                                 cell.classList.add("selected") // select it
@@ -106,34 +185,7 @@
             console.log(arr);
             return arr
         };
-        function selectRandomCells() {
-            const userWordQuant = document.querySelector("#howManyRandomWords").value
-            const selectable_words = document.querySelectorAll(".selectable-word")
-            const randomWordIndexes = generateRandomIndexes(userWordQuant)
-            console.log('User wants' + userWordQuant + ' words.')
-            console.log(userWordQuant)
-
-            for (i = 0; i < selectable_words.length; i++ ) {
-                word = selectable_words[i]
-
-                // If that index isn't in the list
-                if (randomWordIndexes.indexOf(i) === -1) {
-                    
-                    if (word.classList.contains('selected')){ // if it's selected
-                        word.classList.remove("selected") //deselect the word
-                    };
-                
-                // If the word index IS in the list (please select)
-                } else { 
-                    if (!word.classList.contains("selected")){ // If it's not selected
-                        word.classList.add("selected") // select it
-                    }
-
-                };
-            };
-
-        };
-    
+        
         function getWordsFromCells() {
             var cells = document.querySelectorAll('.selected')
             console.log('Found the following cells:')
