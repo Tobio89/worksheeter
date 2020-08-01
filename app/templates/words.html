@@ -144,9 +144,14 @@
 
         function selectWords() {
             const wordContainer = document.querySelector('.word-selection-container');
+            
+            
+
 
             function clickedCell(e){
                 let cell = e.target
+
+                const hidden_state = document.querySelector("#show_hide").getAttribute("data-hidden");
 
 
 
@@ -155,7 +160,12 @@
 
                         if (cell.classList.contains('selected')){ // if it's selected
                                 cell.classList.remove("selected") //deselect the word
-                                cell.classList.add("hidden")
+
+                                if (hidden_state == '1') {
+                                    cell.classList.add("hidden")
+                                };
+
+                                
                                 console.log('Deselecting ' + cell.innerText)
                         } else if (!cell.classList.contains("selected")){ // If it's not selected
                                 cell.classList.add("selected") // select it
