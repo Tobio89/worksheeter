@@ -89,6 +89,15 @@ def getDefinitionFromDictSite(word):
 
     try:
         found_definitions_dict = dictionary.meaning(word)
+        if found_definitions_dict:
+            try:
+                found_definitions_dict = checkMissingBrackets(found_definitions_dict)
+            except:
+                print('New brackets system failed')
+                found_definitions_dict = found_definitions_dict
+        else:
+            print(f'Word {word} was not in the dictionary')
+            return None
 
          # Search for example
         print(f'Searching for example for {word}')
@@ -201,7 +210,7 @@ def getExampleForWord(word):
         for i in range(len(split_for_cloze_example)):
             
             cell = split_for_cloze_example[i]
-            if word in cell:
+            if word.lower() in cell.lower():
                 split_for_cloze_example[i] = '__________________'
 
         return ' '.join(split_for_cloze_example)
@@ -211,6 +220,21 @@ def getExampleForWord(word):
         return []
 
 
-# print(getMultipleDefinitions(getRandomUniqueWords(test_article_contents)))
+def checkMissingBrackets(definitions_dict):
+    for POS in definitions_dict:
+        for num, individual_definition in enumerate(definitions_dict[POS]):
 
-# print(getDefinitionFromDictSite('conditions'))
+            left_brackets = 0
+            right_brackets = 0
+
+            for char in individual_definition:
+                if char == '(':
+                    left_brackets += 1
+                if char == ')':
+                    right_brackets += 1
+            if left_brackets > right_brackets:
+                print('Brackets mismatch found!')
+                definitions_dict[POS][num] += ')'
+
+    return definitions_dict        
+
