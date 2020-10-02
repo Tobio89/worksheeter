@@ -13,9 +13,9 @@
                 <p>
                 
                 <div class="alert alert-{{category}}" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
-                    </button>
+                    </button> -->
                     <strong>
                         {% if category == 'info' %}
                             Information:
@@ -37,34 +37,41 @@
         {% endif %}
 {% endwith %}
 
-<div class="container" style="padding-bottom: 10vh;">
+<div class="container" style="padding-bottom: 3vh;">
+    <div class="content-cell cell-box" style="width:100%">
     <h3 class="blue-title">Select Vocab Words:</h3>
-
-    {% if words %}
-        <div style="display: flex; justify-content: center;">
-            <form id="select-words" method="POST" onsubmit="return getWordsFromCells();">
-                <div style="width:inherit; padding:10px;text-align: center;">
-                        
-                        <input type="button" name="randomize_words" onclick="selectRandomCells()" value="Select Random Words">
-                        <input type="number" id="howManyRandomWords" min='1' max="20" value="6">
-                        <button type="button" id="show_hide" style="width: 160px;"data-hidden=1 onclick="toggle_hidden()">See All Words</button>
-                        <button id="submit_words" type="submit" name="submitted_words" formmethod="POST" style="margin-left: 20px;">Submit Chosen Words</button>
-                        
-                        
-                </div>
+    </div>
+</div>
+{% if words %}
+<div> 
+    <form id="select-words" method="POST" onsubmit="return getWordsFromCells();">
+        <div style="width:inherit; padding:10px;text-align: center;">
                 
-                <div class="word-selection-container">
-
-                    {% for word in words %}
-                        <div class="selectable-word unselected">{{word}}</div>
-                    {% endfor %}
+                <input type="button" name="randomize_words" onclick="selectRandomCells()" value="Select Random Words">
+                <input type="number" id="howManyRandomWords" min='1' max="20" value="6">
+                <button type="button" id="show_hide" style="width: 160px;"data-hidden=1 onclick="toggle_hidden()">See All Words</button>
+                <button id="submit_words" type="submit" name="submitted_words" formmethod="POST" style="margin-left: 20px;">Submit Chosen Words</button>
                 
-                </div>
-        
-            </form>
-            
+                
         </div>
-    {% endif %}
+
+        <div style="width:100%">
+        <div class="word-selection-container">
+            
+
+            {% for word in words %}
+                <div class="selectable-word unselected">{{word}}</div>
+            {% endfor %}
+        
+        </div>
+    </div>
+
+
+
+    </form>
+            
+</div>
+{% endif %}
 
 
     <script>

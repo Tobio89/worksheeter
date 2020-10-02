@@ -1,12 +1,12 @@
 from flask import Flask, render_template
-from flask_bootstrap import Bootstrap
+# from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 # from flask_moment import Moment
 from config import config
 
 
-bootstrap = Bootstrap()
+# bootstrap = Bootstrap()
 db = SQLAlchemy()
 # mail = Mail()
 
@@ -16,7 +16,7 @@ def create_app(config_name):
     print('Configured as...')
     print(config[config_name])
 
-    bootstrap.init_app(app)
+    # bootstrap.init_app(app)
     # mail.init_app(app) # Commented to remove mail functionality
     # moment.init_app(app) # Commented to remove moment functionality
     db.init_app(app)

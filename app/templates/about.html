@@ -4,12 +4,6 @@
 
 {% block content %}
 {{ super() }}
-<div class="container">
-    <div class="page-header">
-        <h1>ESL Helper</h1>
-    </div>
-</div>
-
 
 {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -18,9 +12,9 @@
                 <p>
                 
                 <div class="alert alert-{{category}}" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
-                    </button>
+                    </button> -->
                     <strong>
                         {% if category == 'info' %}
                             Information:
@@ -44,6 +38,8 @@
 
 <div class="container">
 
+    <div class="content-cell cell-box">
+
     <h3>About Auto-Worksheet</h3>
     <br/>
     <p>Auto-Worksheet is a portfolio project built in Python using the Flask framework.</p>
@@ -56,7 +52,10 @@
         Additional UX functions are added with vanilla JavaScript.<br/>
         The site also incorporates a small amount of Vue.JS!
     </p>
-    <hr>
+    </div>
+</div>
+<div class="container">
+    <div class="content-cell cell-box">
     <h4>About the Creator</h4>
     <br/>
     <p>Tobias S is an ESL teacher who currently lives in South Korea, near Hanam, east of Seoul.</p>
@@ -74,6 +73,8 @@
             <li><a href="https://github.com/BruceJi7">Tobias S on Github</a>: Other miscellaneous projects written in Python.</li>
         </ul>
     </p>
+    </div>
+</div>
 
 
 

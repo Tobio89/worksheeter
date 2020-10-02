@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% block head %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{%endblock%}</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link href="./static/worksheet.css" rel="stylesheet">
+
+</head>
+{% endblock %}
+<body>
+    {% block navbar %}
+    {% endblock %}
+    
+    {% block content %}
+    {% endblock %}
+</body>
+
+<script src="./static/wsm_vue.js"></script>
+
+</html>

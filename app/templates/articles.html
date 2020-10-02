@@ -13,9 +13,9 @@
                 <p>
                 
                     <div class="alert alert-{{category}}" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
-                        </button>
+                        </button> -->
 
                         <strong>
                             {% if category == 'info' %}
@@ -39,16 +39,24 @@
         {% endif %}
 {% endwith %}
 
-<div class="container" style="padding-bottom: 10vh;">
-    <h3 class="blue-title">Choose an Article:</h3>
-
-    {% if chosen_terms %}
+<div class="container">
+    <div class="content-cell cell-box" style="width:100%">
+        <h3 class="blue-title">Choose an Article:</h3>
+    
+        {% if chosen_terms %}
+    
         <p>CNN articles about: <span style="font-weight:bold;">{{chosen_terms}}</span></p>
-        <p>We recommend reading the article, and if you like it, select it and get your worksheet.</p>
-    {% endif %}
 
+        
+
+        {% endif %}
+    </div>
+
+    
+</div>
 
     {% if articles %}
+    <div class="container">
     <form id="select-article" method="POST" onsubmit="return submitAndWait();">
         <div>
             <div style="width:inherit; padding:10px;text-align: center;">
@@ -56,13 +64,11 @@
             </div>
                 <div class="article-container">
                     {% for art in articles %}
-                    <div class="article-unit-container">
-                        <div class="article-unit">
+                        <div class="article-unit content-cell cell-box">
                             <div class="article-title">{{art.title}}</div>
                             <div class="article-description">{{art.description}}</div>
                             <div class="article-url"><a href={{art.url}}>Read the article</a></div>
                         </div>
-                    </div>
                         <!-- <p><input type="radio" name="user_selected_article" value="{{art.url}}%{{art.title}}"><a class='article-link' href={{art.url}}>{{art.title}}</a></p> -->
                     {% endfor %}
                 </div>
@@ -71,8 +77,9 @@
                 <input type="button" name="submit_article" onclick="selectAndWait()" value="Make My Worksheet!"> -->
 
         </div>
-    </form>
-    {% endif %}
+</form>
+</div>
+{% endif %}
 
 
     <script>

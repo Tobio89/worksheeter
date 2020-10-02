@@ -1,260 +1,21 @@
-{% extends "bootstrap/base.html" %}
+{% extends "foundation.html" %}
 
-{% block head %} {{super()}}
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-{% endblock %}
 {% block title %}Auto-Worksheet - {% endblock %}
 
-{% block styles %}
-
-{{ super() }}
-<style>
-    .head-logo {
-        width: 600px;
-        height: 82px;
-        background: url("./static/ESL-auto_header.png") no-repeat 0 0 / 600px auto;
-    }
-    .blue-title {
-        color: #003399;
-    }
-    #wait-overlay {
-        position: fixed; /* Sit on top of the page content */
-        display: none; /* Hidden by default */
-        width: 100%; /* Full width (cover the whole page) */
-        height: 100%; /* Full height (cover the whole page) */
-        top: 0; 
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0,0,0,0.5); /* Black background with opacity */
-        z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-        cursor: progress/* Add a pointer on hover */
-    }
-    #wait-container {
-        display:flex;
-        width: 100%;
-        height: 100%;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    #wait-loader {
-        /* position: absolute; */
-        /* left: 50%;
-        top: 50%; */
-        z-index: 1;
-        width: 100px;
-        height: 100px;
-        margin: -75px 0 0 -75px;
-        border: 16px solid #f3f3f3;
-        border-radius: 50%;
-        border-top: 16px solid #3498db;
-        width: 120px;
-        height: 120px;
-        -webkit-animation: spin 2s linear infinite;
-        animation: spin 2s linear infinite;
-    }
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    #wait-label {
-        /* position: absolute;
-        left: 50%;
-        top: 70%; */
-        z-index: 1;
-        color: white;
-        font-size: 20pt;
-        animation: fade 2s ease infinite alternate;
-        padding: 13vh;
-    }  
-    @keyframes fade {
-        0% { opacity: 1; }
-        100% {opacity: 0;}
-    }
-    
-    .doc-overlay {
-            /* display: flex;
-            align-items: center;
-            justify-content: center; */
-            position: fixed; /* Sit on top of the page content */
-            display: none; /*Hidden by default */
-            width: 100%; /* Full width (cover the whole page) */
-            height: 100%; /* Full height (cover the whole page) */
-            top: 0; 
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0,0,0,0.5); /* Black background with opacity */
-            z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-            cursor: progress;/* Add a pointer on hover */
-        }
-    .doc-container{
-        display:flex;
-        width: 100%;
-        height: 100%;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;   
-    }
-        
-    .doc-page {
-            position: absolute;
-            top: 30%;
-            left: 50%;
-            display:flex;
-            flex-direction: column;
-            align-items: left;
-            justify-content: space-around;
-            width: 80px;
-            height: 100px;
-            background: rgb(240, 240, 240);
-            border-radius: 5%;
-            border: 2px solid darkgray;
-            transform-origin:center;
-           
-        }
-    #index-anim{
-            animation: pagesort 2s linear infinite;
-    }    
-    @keyframes pagesort {
-            0% {
-                top: 30%;
-                left: 50%;
-            }
-            50%{
-                top: 50%;
-                left: 45%;
-            }
-            50.1% {
-                top: 30%;
-                left: 50%
-            }
-            100% {
-                top: 50%;
-                left: 55%
-            }
-        }
-    .doc-line {
-            
-            background: grey;
-            /* width: 80%; */
-            height: 5%;
-            border-radius: 5%;
-            margin-left: 10%;
-        }
-    .doc-page :nth-child(2) {
-            width: 30%;
-        }
-    .doc-page :nth-child(3) {
-            width: 80%;
-        }
-    .doc-page :nth-child(4) {
-            width: 40%;
-        }
-    .doc-page :nth-child(5) {
-            width: 70%;
-        }
-    .doc-page :nth-child(6) {
-            width: 60%;
-        }
-    .doc-page :first-child {
-            background: none;
-        }
-    .doc-page :last-child {
-            background: none;
-        }
-
-    /* .article-container {
-        padding: 10px;
-
-    } */
-
-    #instructions {
-        margin-top:50px;
-        margin-bottom:50px;
-    }
-    #instructions p{
-        margin-left:40px;
-        margin-bottom:20px;
-    }
-    #instructions h5 {
-        margin-bottom: 20px;
-    }
-    .article-unit {
-        padding:5px;
-    }
-    .article-unit-container:nth-child(odd){
-        background:whitesmoke
-    }
-
-    .selected-article {
-        background-color: #003399;
-        color: white;
-        
-    }
-    /* .article-unit:active{
-        background: #003399;
-        color: white;
-    } */
-
-    .article-title {
-        font-weight: bold;
-    }
-
-    .word-selection-container {
-        /* display:flex; */
-        width:70vw;
-        /* height:90vh; */
-    }
-    .selectable-word {
-        border:1px solid black;
-        border-radius: 10px;
-        float:left;
-        padding:5px;
-        margin:5px;
-        width: 10vw;
-        text-align: center;
-    }
-    .hidden {
-        display:none;
-    }
-    .selected {
-        background: #003399;
-        color: white;
-    }
-
-
-
-</style>
-{% endblock %}
-
 {% block navbar %}
-<div class="navbar navbar-inverse" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">Auto-Worksheet</a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="/custom">Custom</a></li>
-                <li><a href="/about">About</a></li>
-                <!-- To make sick stuff like dropdowns here we can't use li -->
-                <!-- Alternatively put a sub menu on each page -->
 
-            </ul>
-            
-        </div>
-        {% block subnav %}
-        {% endblock %}
+<nav class="bar">
+    <div class="navbar">
+        <ul class="nav-list">
+        
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+
+        </ul>
     </div>
-</div>
+    
+
+</nav>
 {% endblock %}
 
 
@@ -282,16 +43,13 @@
     </div>
 </div>
 
-<div class="container">
-    <div class="head-logo">
-    </div>
+<div class="head-logo">
+    <img src="./static/ESL-auto_header.png">
 </div>
 
 
+
 {% endblock %}
 
-{% block scripts %}
-{{ super() }}
-<script src="./static/wsm_vue.js"></script>
-{% endblock %}
+
 

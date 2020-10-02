@@ -31,11 +31,53 @@ def about():
 def index():
 
     if request.method == 'POST':
+        print(request.form)
+        if 'user_text_title' in request.form:
+            user_title = request.form.get('user_text_title')
+
+        #gather form results:
+
+        #This request triggers article search mode
         if 'user_search_terms' in request.form:
             user_search_terms = request.form.get('user_search_terms')
             session['search_terms'] = user_search_terms
 
             return redirect(url_for('main.articles'))
+
+        #This request triggers custom text mode
+        if 'user_custom_text' in request.form:
+            user_submitted_text = request.form.get('user_custom_text')
+            
+            if user_submitted_text:
+            # Clean up the user's text
+            # Remove unicode chars, split into paragraphs, remove blank lines and lines with square braces
+                user_submitted_paragraphs = cleanUpAndSplitText(user_submitted_text)
+            
+            else: #Cover user submitting blank form
+
+                flash('Oops! No text was found in the box', 'warning')
+                return redirect(url_for('main.index'))
+        
+        
+
+        if not user_title:
+            user_title = user_submitted_paragraphs[0][:30]
+
+        print('Added title and URL to DB.')
+        session_worksheet = Worksheets(title=user_title, url=None, timestamp=timeless(datetime.now()), paragraphs='#%#'.join(user_submitted_paragraphs))
+        db.session.add(session_worksheet)
+            
+        #Flush to generate row id - 
+        # save this to session to allow working on same data across multiple pages.
+        db.session.flush()
+        user_sheet_id = session_worksheet.id
+        session['user-sheet-id'] = user_sheet_id
+        print(user_sheet_id)
+
+        db.session.commit()
+
+        return redirect(url_for('main.words'))
+
 
     return render_template('index.html')
 
@@ -167,7 +209,7 @@ def words():
         user_article_url = DB_sheet_data.url
     except:
         # User will reach here if they try to go back to a page after the download was performed.
-        flash("Your worksheet session has expired! Try making the sheet again.", 'danger')
+        flash("Your worksheet session has expired! Try making the sheet again.", 'warning')
         return redirect(url_for('main.index'))
 
     # If the form has been submitted: (The user is already on the page)
@@ -211,7 +253,7 @@ def words():
             except:
                 # This tends to happen if the article doesn't have the right CSS tags
                 print('Failed to extract paragraph data')
-                flash('Failed to extract paragraph data! Sorry :(', 'danger')
+                flash('Failed to extract paragraph data! Sorry :(', 'warning')
         else:
             article_paragraphs = DB_sheet_data.paragraphs.split('#%#')
 
@@ -248,7 +290,7 @@ def sheet():
         article_paragraphs = DB_sheet_data.paragraphs.split('#%#')
     except:
         # User will reach here if they try to go back to a page after the download was performed.
-        flash("Your worksheet session has expired! Try making the sheet again.", 'danger')
+        flash("Your worksheet session has expired! Try making the sheet again.", 'warning')
         return redirect(url_for('main.index'))
 
 
@@ -260,7 +302,7 @@ def sheet():
     else:
         print('User forgot to select words. Going random.')
         user_word_definitions = getDefinitionForRandomWords(article_paragraphs)
-        flash('No words were selected, so six random words were picked.', 'info')
+        flash('No words were selected, so six random words were picked.', 'warning')
 
     # Generate file
     download_file = writeDocx(article_paragraphs, user_word_definitions, user_article_title)

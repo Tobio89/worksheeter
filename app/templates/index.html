@@ -10,13 +10,14 @@
 {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         <div class="container">
+            <div style="width:100%">
             {% for category, message in messages %}
                 <p>
                 
                 <div class="alert alert-{{category}}" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
-                    </button>
+                    </button> -->
                     <strong>
                         {% if category == 'info' %}
                             Information:
@@ -25,7 +26,7 @@
                         {% elif category == 'success' %}
                             Success:
                         {% else %}
-                            {{category}}
+                            {{category.capitalize()}}
                         {% endif %}
                     </strong>
                         
@@ -34,100 +35,157 @@
                 
                 </div>
                 </p>
+            </div>
         </div>
         {% endif %}
 {% endwith %}
 
 <div class="container">
+    
+        <div class="content-cell cell-box">
+            <!-- Vue Component -->
+            <div id="form_selection">
 
-    <h3 class="blue-title">Get Started:</h3>
+                <h2 class="blue-title">Get Your Instant Worksheet</h2>
 
-    <p>
-        Generate a discussion worksheet based on CNN articles, complete with basic discussion and comprehension questions!
-    </p>
-        <form id="CNN-search-terms" method='POST' style="padding:20px;">
-            <input name="user_search_terms" style='width:500px;'>
-            <input type="button" onclick="submitAndWait()" value="Search!">
-        </form>
-    <p>
-        Have your own text?</br>
-        <a href="{{ url_for('main.custom') }}">Click here</a> to make a worksheet with your own text.
-    </p>
+                <p>Generate a discussion worksheet based on CNN articles or your own text, complete with basic discussion and comprehension questions!</p>
+                
+                <div id="form_cell">
+
+                    <div id="mode-selection-menu">
+                        <span class="selection-title" @click="turn_on_article_mode()" :class="{'active-selection':article_mode}">Search For Articles</span>
+                        <span class="selection-title" @click="turn_on_custom_mode()" :class="{'active-selection':custom_mode}">Use My Own Text</span>
+                    </div>
+                    
+
+                    <div id="article-mode" v-if="article_mode">
+                        
+                        <form  class="index-form" id="CNN-search-terms" method='POST'>
+                            <input class="input-box" name="user_search_terms" placeholder="Article search terms">
+                            <button class="form-submit" type="button" onclick="submitAndWait('article')" value="Search!">Search!</button>
+                        </form>
+
+                    </div>
+
+                    <div id="custom-mode" v-if="custom_mode">
+
+                        <form class="index-form" id="custom-text-input" method='POST'>
+                            <input class="input-box" name="user_text_title" placeholder="Worksheet title"><br/><br/>
+                            <textarea class="text-box" name="user_custom_text" placeholder="Article content"></textarea>
+                            <button class="form-submit" type="button" onclick="submitAndWait('custom')" value="Submit!">Submit!</button>
+                        </form>
+
+                    </div>
+
+                </div>                          
+            </div>
+            <!-- End of Vue Component -->
+        </div>
+
+        <div class="content-cell" id="image-cell">
+            <img id="sheet-img" src="./static/esl-sheet-pic.jpg">
+        </div>
 </div>
 <div class="container">
-        <h3 class="blue-title">How To Use ESL Auto Worksheet:</h3>
-        <p>
-            <ol>
-                <li>Enter in a topic and find articles using CNN's google-powered search</li>
-                <li>Choose an article - use the links to check out the articles on CNN's site!</li>
-                <li>Select up to 20 vocabulary words to be listed with dictionary definitions in the worksheet.</li>
-                <li>Download your worksheet!</li>
-                <li>Add your own tailored questions using the template questions, print, and go!</li>
-            </ol>
-        </p>
-        <div id='instructions'>
-            <h3 class="blue-title" @click="main_shown=!main_shown">Teaching With The Sheet:</h3>        
-            <div v-if="main_shown">
-            
-                <h5 class="blue-title">General Tips:</h5>    
+
+    <div id="instructions">
+
+
+        <div class="content-cell cell-box">
+
+            <h2 class="blue-title"  @click="show_instructions=!show_instructions">%[ instructions_title ]%</h2>
+            <div v-if="show_instructions">
+                <p>
+                    <ol>
+                        <li>Enter in a topic and find articles using CNN's google-powered search</li>
+                        <li>Choose an article - use the links to check out the articles on CNN's site!</li>
+                        <li>Select up to 20 vocabulary words to be listed with dictionary definitions in the worksheet.</li>
+                        <li>Download your worksheet!</li>
+                        <li>Add your own tailored questions using the template questions, print, and go!</li>
+                    </ol>
+                </p>
+
+                <h3 class="blue-title" @click="main_shown=!main_shown">Teaching With The Sheet:</h3>        
+                <div v-if="main_shown">
+                    
+                    <h5 class="blue-title">General Tips:</h5>    
                     <p>
-                    The ESL Auto Worksheet comes with fill-in-the-blank comprehension questions, as well as some general debate-style questions
-                    for students to get talking.
-                    <br/>
-                    Confident teachers, or teachers looking for a quick filler activity, may use the sheet as-is, but we recommend the user to check over the article before 
-                    using it in a class.</p>
-                    <p>
-                    Consider cutting paragraphs out of the article to make it shorter, removing excess definitions for words, and adding your own more specific comprehension and discussion questions.
-                    The sheet includes template questions to get you started - fill in the questions and answers using the article in the sheet.
-                    </p>
-                <h5 class="blue-title" @click="read_shown=!read_shown">As Reading Comprehension:</h5>
-                <div v-if="read_shown">
-                    <p>
-                        Consider asking students to take turn reading. Alternatively, tell students they can read between three and five lines.<br/>
-                        Students can circle new vocabulary and sentence structures, too. 
+                        The ESL Auto Worksheet comes with fill-in-the-blank comprehension questions, as well as some general debate-style questions
+                        for students to get talking.
                     </p>
                     <p>
-                        For a more reading-based sheet, consider adding multiple choice questions based on vocabulary and comprehension.
-                        For a more discussion-based sheet, ask students their for anecdotes and opinions on specific parts of the article.<br/>
-                        Students could make arguments to convince someone in the article to change their mind.
+                        Confident teachers, or teachers looking for a quick filler activity, may use the sheet as-is, but we recommend the user to check over the article before 
+                        using it in a class.
                     </p>
                     <p>
-                        For reading comprehension, it is not necessary to include all of the automatically generated cloze paragraphs. Consider cutting this down to 3-6 paragraphs.
+                        Consider cutting paragraphs out of the article to make it shorter, removing excess definitions for words, and adding your own more specific comprehension and discussion questions.
+                        The sheet includes template questions to get you started - fill in the questions and answers using the article in the sheet.
                     </p>
+                    <h5 class="blue-title" @click="read_shown=!read_shown">As Reading Comprehension:</h5>
+                    
+                    <div v-if="read_shown">
+                        <p>
+                                Consider asking students to take turn reading. Alternatively, tell students they can read between three and five lines.<br/>
+                                Students can circle new vocabulary and sentence structures, too. 
+                        </p>
+                        <p>
+                                For a more reading-based sheet, consider adding multiple choice questions based on vocabulary and comprehension.
+                                For a more discussion-based sheet, ask students their for anecdotes and opinions on specific parts of the article.<br/>
+                                Students could make arguments to convince someone in the article to change their mind.
+                        </p>
+                        <p>
+                                For reading comprehension, it is not necessary to include all of the automatically generated cloze paragraphs. Consider cutting this down to 3-6 paragraphs.
+                        </p>
+                    </div>
+                    <div v-else>
+                        <p>...</p>
                 </div>
+                    <h5 class="blue-title" @click="list_shown=!list_shown">As Listening Comprehension:</h5>
+
+                    <div v-if="list_shown">
+                        <p>
+                                To use the ESL Auto Worksheet as a listening comprehension sheet, choose a suitable YouTube video with manually added subtitles. 
+                                <br/>Visit <a href="https://savesubs.com/">savesubs.com</a> or <a href="https://downsub.com/">downsub.com</a> and download the subtitles for the video.
+                        </p>
+                        <p>
+                                It is recommended that you format the subtitles into paragraphs.
+                        </p>
+                        <p>
+                                For listening comprehension, students can follow along with the automatically generated cloze paragraphs, filling in the blanks as the video plays.<br/>
+                                Rewind the video as the students require.
+                        </p>
+                        <p>
+                                Depending on the level of your students, a 3-5 minute video is ample for one session!
+                        </p>
+                    </div>
+                    <div v-else>
+                        <p>...</p>
+                    </div>
+                </div>
+                
                 <div v-else>
-                    <p>...</p>
-                </div>
-                <h5 class="blue-title" @click="list_shown=!list_shown">As Listening Comprehension:</h5>
-                <div v-if="list_shown">
-                <p>
-                    To use the ESL Auto Worksheet as a listening comprehension sheet, choose a suitable YouTube video with manually added subtitles. 
-                    Visit <a href="https://savesubs.com/">savesubs.com</a> or <a href="https://downsub.com/">downsub.com</a> and download the subtitles for the video.
-                </p>
-                <p>
-                    It is recommended that you format the subtitles into paragraphs.
-                </p>
-                <p>
-                    For listening comprehension, students can follow along with the automatically generated cloze paragraphs, filling in the blanks as the video plays.<br/>
-                    Rewind the video as the students require.
-                </p>
-                <p>
-                    Depending on the level of your students, a 3-5 minute video is ample for one session!
-                </p>
-                </div>
-                <div v-else>
+                    <p>Click to read about using the sheet in your class.</p>
                     <p>...</p>
                 </div>
             </div>
             <div v-else>
-                <p>Click to read about using the sheet in your class.</p>
-                <p>...</p>
+                <p>
+                    Learn more about Auto Worksheet
+                </p>
             </div>
         </div>
+    </div>
+</div>
     
     <script>
-        function submitAndWait() {
-            document.querySelector("#CNN-search-terms").submit();
+        function submitAndWait(button) {
+            if (button === 'article') {
+                document.querySelector("#CNN-search-terms").submit();
+            } else if (button ==='custom') {
+                document.querySelector("#custom-text-input").submit();
+            }
+            
+            
 
             const overlay = document.querySelector("#loading-overlay");
             
@@ -136,6 +194,6 @@
         
         }
     </script>
-
+    </div>
 </div>
 {% endblock %}

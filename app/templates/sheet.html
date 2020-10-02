@@ -12,9 +12,9 @@
                 <p>
                 
                 <div class="alert alert-{{category}}" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
-                    </button>
+                    </button> -->
                     <strong>
                         {% if category == 'info' %}
                             Information:
@@ -37,6 +37,7 @@
 {% endwith %}
 
 <div class="container">
+    <div class="content-cell cell-box">
     <h3 class="blue-title">Download Your Sheet:</h3>
 
     {% if downLink %}
@@ -48,7 +49,7 @@
     <p>Whilst it is possible to use the sheet as-is, we recommend removing excess definitions for words, and shortening the article to match your students' capabilities.</p>
     <p>To be safe, the sheet includes a fill-in-the-blank question for each of the paragraphs. We recommend you cut this down to four questions.</p>
     <p>The sheet works best if you add additional, tailored questions to it. Use the template questions in the sheet or make your own!</p>
-
+    </div>
 
 </div>
 {% endblock %}
