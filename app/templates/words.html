@@ -47,15 +47,15 @@
     <form id="select-words" method="POST" onsubmit="return getWordsFromCells();">
         <div style="width:inherit; padding:10px;text-align: center;">
                 
-                <input type="button" name="randomize_words" onclick="selectRandomCells()" value="Select Random Words">
+                <input class="auto-button" type="button" name="randomize_words" onclick="selectRandomCells()" value="Select Random Words">
                 <input type="number" id="howManyRandomWords" min='1' max="20" value="6">
-                <button type="button" id="show_hide" style="width: 160px;"data-hidden=1 onclick="toggle_hidden()">See All Words</button>
-                <button id="submit_words" type="submit" name="submitted_words" formmethod="POST" style="margin-left: 20px;">Submit Chosen Words</button>
+                <button class="auto-button" type="button" id="show_hide" style="width: 160px;"data-hidden=1 onclick="toggle_hidden()">See All Words</button>
+                <button class="auto-button" id="submit_words" type="submit" name="submitted_words" formmethod="POST" style="margin-left: 20px;">Submit Chosen Words</button>
                 
                 
         </div>
 
-        <div style="width:100%">
+        <div style="width:100%; border-top:1px solid #999; padding-top:10px;">
         <div class="word-selection-container">
             
 
